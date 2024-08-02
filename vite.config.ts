@@ -12,7 +12,7 @@ export default defineConfig({
       name: 'buynet-pwa',
       short_name: 'buynet',
       description: 'simple market',
-      theme_color: '#675AE7',
+      // theme_color: '#675AE7',
 
       icons: [{
         src: 'pwa-64x64.png',

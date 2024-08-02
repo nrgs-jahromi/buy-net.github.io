@@ -3,6 +3,7 @@ import { FC } from "react";
 import Login from "../auth/LoginPage";
 import Verification from "../auth/Verification";
 import MainTemplate from "../mainTemplate/MainTemplate";
+import UserProfilePage from "../profile/UserProfilePage";
 
 const AppRoutes: FC = () => {
   return (
@@ -11,7 +12,7 @@ const AppRoutes: FC = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/verify" element={<Verification />} />
       <Route path="/*" element={<MainTemplate />}>
-          {/* <Route path="dashboard" element={<Dashboard />} /> */}
+          <Route path="profile" element={<UserProfilePage />} />
 
           
  

@@ -21,7 +21,7 @@ export type NavbarItem = {
 };
 
 export default function FixedBottomNavigation() {
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState<number|null>(null);
   const [active, setActive] = useState<string | null>(null);
   const navigate = useNavigate();
 
@@ -61,7 +61,7 @@ export default function FixedBottomNavigation() {
         label: "حساب کاربری",
         icon1: <Profile size={24} />,
         icon2: <Profile variant="Bold" size={30} />,
-        path: "#",
+        path: "profile",
       },
     ],
     []
@@ -71,27 +71,19 @@ export default function FixedBottomNavigation() {
     navigate(item.path);
   };
 
-  // useEffect(() => {
-  //   const pathParts = window.location.pathname.split("/");
-  //   const lastPathPart = pathParts[pathParts.length - 1];
-
-  //   const matchingNavbarItem = navbarItems.find((item) => lastPathPart === item.id);
-  //   if (matchingNavbarItem) {
-  //     setActive(matchingNavbarItem.id);
-  //   }
-  // }, [navbarItems]);
 
   useEffect(() => {
     const pathParts = window.location.pathname.split("/");
     const lastPathPart = pathParts[pathParts.length - 1];
 
-    const matchingNavbarItem = navbarItems.find(
-      (item) => lastPathPart === item.id
-    );
+    const matchingNavbarItem = navbarItems.find((item) => lastPathPart === item.id);
     if (matchingNavbarItem) {
       setActive(matchingNavbarItem.id);
+      setValue(navbarItems.indexOf(matchingNavbarItem)); 
     }
-  }, [navbarItems, active]);
+  }, [navbarItems]);
+
+
   return (
     <>
       <Paper

@@ -24,7 +24,7 @@ const MainTemplate = () => {
           component="main"
           sx={{
             flexGrow: 1,
-            padding: "32px",
+            // padding: "32px",
             paddingBottom: isLargeScreen ? "" : "100px",
           }}
         >

@@ -36,7 +36,7 @@ const Verification = () => {
   };
 
   const handleSubmit = () => {
-    // navigate("/passrecovery/setnew");
+    navigate("/");
   };
 
   const handleResend = () => {

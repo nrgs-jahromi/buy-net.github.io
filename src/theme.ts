@@ -1,5 +1,15 @@
 import { createTheme } from "@mui/material/styles";
 
+// const getMetaThemeColor = () => {
+//   const metaThemeColor = document.querySelector("meta[name='theme-color']");
+//   console.log(metaThemeColor?.getAttribute("content") );
+  
+//   return metaThemeColor ? metaThemeColor.getAttribute("content") : "#455A64";
+// };
+
+// const primaryColor = getMetaThemeColor();
+
+
 const theme = createTheme({
   direction: "rtl",
   palette: {

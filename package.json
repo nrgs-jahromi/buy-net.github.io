@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview --host",
@@ -28,6 +28,7 @@
     "react-number-format": "^5.4.0",
     "react-router-dom": "^6.25.1",
     "react-slick": "^0.30.2",
+    "react-swipeable": "^7.0.1",
     "sharp": "0.32.6",
     "sharp-ico": "^0.1.5",
     "slick-carousel": "^1.8.1"

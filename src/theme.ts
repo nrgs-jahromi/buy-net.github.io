@@ -13,7 +13,7 @@ const theme = createTheme({
       main:"#8489D4"
     },
     text: {
-      primary: "#2C266A",
+      primary: "#455A64",
     },
     background: {
       default: "#F8F9FF",
@@ -86,7 +86,10 @@ const theme = createTheme({
           borderRadius: "8px",
           // padding:"0 14px",
           "& .MuiOutlinedInput-notchedOutline": {
-            border: `0.5px solid #E1DEFA`,
+            border: `0.5px solid #85949B`,
+          },
+          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+            border: `1px solid #65777F`, // رنگ دلخواه برای فوکوس
           },
         },
         input: {

@@ -36,13 +36,14 @@ const Verification = () => {
   };
 
   const handleSubmit = () => {
-    navigate("/passrecovery/setnew");
+    // navigate("/passrecovery/setnew");
   };
 
   const handleResend = () => {
-    setTimer(10);
-    setIsTimerRunning(true);
-    setOtp("")
+    navigate("/login")
+    // setTimer(10);
+    // setIsTimerRunning(true);
+    // setOtp("")
   };
 
   useEffect(() => {

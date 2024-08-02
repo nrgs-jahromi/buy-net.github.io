@@ -25,8 +25,10 @@ import {
   Profile,
   Timer,
 } from "iconsax-react";
+import { useNavigate } from "react-router-dom";
 
 const UserProfilePage = () => {
+  const navigate = useNavigate();
   const glassStyle = {
     backgroundColor: "rgba(255, 255, 255, 0.3)",
     backdropFilter: "blur(10px)",
@@ -125,6 +127,7 @@ const UserProfilePage = () => {
               size="small"
               sx={{ color: theme.palette.grey[400] }}
               endIcon={<ArrowLeft2 size={16} />}
+              onClick={() => navigate("/history")}
             >
               مشاهده همه
             </Button>
@@ -216,7 +219,7 @@ const UserProfilePage = () => {
             </Button>
           </ListItem>
         </Box>
-      <Button>خروج از حساب کاربری</Button>
+        <Button>خروج از حساب کاربری</Button>
       </Box>
     </Box>
   );

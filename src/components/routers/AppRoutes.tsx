@@ -4,6 +4,7 @@ import Login from "../auth/LoginPage";
 import Verification from "../auth/Verification";
 import MainTemplate from "../mainTemplate/MainTemplate";
 import UserProfilePage from "../profile/UserProfilePage";
+import History from "../profile/history/History";
 
 const AppRoutes: FC = () => {
   return (
@@ -13,6 +14,7 @@ const AppRoutes: FC = () => {
       <Route path="/verify" element={<Verification />} />
       <Route path="/*" element={<MainTemplate />}>
           <Route path="profile" element={<UserProfilePage />} />
+          <Route path="history" element={<History />} />
 
           
  

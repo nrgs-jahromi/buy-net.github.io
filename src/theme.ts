@@ -127,8 +127,8 @@ const theme = createTheme({
     MuiPaper: {
       styleOverrides: {
         root: {
-          border: `0.5px solid #E1DEFA`,
-          boxShadow: "none",
+          // border: `0.5px solid #E1DEFA`,
+          // boxShadow: "none",
           borderRadius: "8px",
           backgroundColor: "white",
           height: "fit-content",

@@ -1,34 +1,40 @@
+import React, { useState } from "react";
 import {
   Box,
   Typography,
   IconButton,
-  List,
   ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
   Button,
   Divider,
 } from "@mui/material";
 import theme from "../../theme";
 import profileImg from "../../assets/profile-circle.svg";
 import {
-  ArrowLeft,
   ArrowLeft2,
   Camera,
   Clock,
   InfoCircle,
-  Information,
   Mobile,
-  More,
   Notification,
   Profile,
-  Timer,
 } from "iconsax-react";
 import { useNavigate } from "react-router-dom";
+import UsernameDrawer from "./UsernameDrower";
+import UserInfoDrawer from "./UserInfoDrawer";
 
-const UserProfilePage = () => {
+const UserProfilePage: React.FC = () => {
   const navigate = useNavigate();
+  const [usernameDrawerOpen, setUsernameDrawerOpen] = useState(false);
+  const [userInfoDrawerOpen, setUserInfoDrawerOpen] = useState(false);
+
+  const toggleUsernameDrawer = (open: boolean) => () => {
+    setUsernameDrawerOpen(open);
+  };
+
+  const toggleUserInfoDrawer = (open: boolean) => () => {
+    setUserInfoDrawerOpen(open);
+  };
+
   const glassStyle = {
     backgroundColor: "rgba(255, 255, 255, 0.3)",
     backdropFilter: "blur(10px)",
@@ -71,7 +77,7 @@ const UserProfilePage = () => {
                 <Typography variant="h4" fontWeight={"700"}>
                   ک
                 </Typography>
-              </Box>{" "}
+              </Box>
               <Box
                 sx={{
                   position: "absolute",
@@ -118,7 +124,6 @@ const UserProfilePage = () => {
             >
               <Clock size={20} />
               <Typography variant="body2" fontSize={18}>
-                {" "}
                 خریدهای پیشین
               </Typography>
             </Box>
@@ -184,6 +189,7 @@ const UserProfilePage = () => {
               size="small"
               sx={{ color: theme.palette.grey[400] }}
               endIcon={<ArrowLeft2 size={16} />}
+              onClick={toggleUsernameDrawer(true)}
             >
               کاربر 1234
             </Button>
@@ -214,6 +220,7 @@ const UserProfilePage = () => {
               size="small"
               sx={{ color: theme.palette.grey[400], width: "fit-content" }}
               endIcon={<ArrowLeft2 size={16} />}
+              onClick={toggleUserInfoDrawer(true)}
             >
               نرگس{" "}
             </Button>
@@ -221,6 +228,12 @@ const UserProfilePage = () => {
         </Box>
         <Button>خروج از حساب کاربری</Button>
       </Box>
+      {usernameDrawerOpen && (
+        <UsernameDrawer open={usernameDrawerOpen} toggleDrawer={toggleUsernameDrawer} />
+      )}
+      {userInfoDrawerOpen && (
+        <UserInfoDrawer open={userInfoDrawerOpen} toggleDrawer={toggleUserInfoDrawer} />
+      )}
     </Box>
   );
 };

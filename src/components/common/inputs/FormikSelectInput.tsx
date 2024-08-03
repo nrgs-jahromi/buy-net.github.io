@@ -56,6 +56,7 @@ const FormikSelectInput: FC<Props> = ({
       <Select
         id={`formik-select-${name}`}
         labelId={`formik-select-${name}-label`}
+        
         {...fields}
         {...selectProps}
         onChange={handleChange}

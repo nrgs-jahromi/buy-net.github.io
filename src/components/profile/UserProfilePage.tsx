@@ -226,7 +226,7 @@ const UserProfilePage: React.FC = () => {
             </Button>
           </ListItem>
         </Box>
-        <Button>خروج از حساب کاربری</Button>
+        <Button onClick={()=>navigate("/login")}>خروج از حساب کاربری</Button>
       </Box>
       {usernameDrawerOpen && (
         <UsernameDrawer open={usernameDrawerOpen} toggleDrawer={toggleUsernameDrawer} />

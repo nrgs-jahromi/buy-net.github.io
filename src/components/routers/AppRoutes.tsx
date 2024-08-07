@@ -6,6 +6,7 @@ import MainTemplate from "../mainTemplate/MainTemplate";
 import UserProfilePage from "../profile/UserProfilePage";
 import History from "../profile/history/History";
 import ScanPage from "../scannner/ScanPage";
+import ProductDetail from "../product/ProductDetail";
 
 const AppRoutes: FC = () => {
   return (
@@ -17,6 +18,7 @@ const AppRoutes: FC = () => {
           <Route path="profile" element={<UserProfilePage />} />
           <Route path="history" element={<History />} />
           <Route path="scanner" element={<ScanPage />} />
+          <Route path="products/:productId" element={<ProductDetail />} />
 
           
  

@@ -25,7 +25,7 @@ const MainTemplate = () => {
           sx={{
             flexGrow: 1,
             // padding: "32px",
-            paddingBottom: isLargeScreen ? "" : "100px",
+            paddingBottom: "100px",
           }}
         >
           <Outlet />

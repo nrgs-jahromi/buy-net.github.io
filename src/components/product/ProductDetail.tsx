@@ -1,6 +1,6 @@
 import React from "react";
 import Slider from "react-slick";
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Typography, Button, Divider } from "@mui/material";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import img1 from "../../assets/E-Wallet-pana (1).svg";
@@ -40,7 +40,7 @@ const ProductDetail = () => {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              height: "400px",
+              height: "300px",
             }}
           >
             <img
@@ -51,7 +51,8 @@ const ProductDetail = () => {
           </Box>
         ))}
       </Slider>
-      <Box sx={{ display: "flex", justifyContent: "space-between", mt: 8 }}>
+      <Divider sx={{ mt: 6 }} />
+      <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
         <Box>
           <Typography variant="subtitle1" color="textSecondary">
             لوازم التحریر / دفتر / فنری
@@ -59,9 +60,7 @@ const ProductDetail = () => {
           <Typography variant="h6" fontWeight="bold">
             نام محصول
           </Typography>
-          <Typography variant="body2" >
-        محل قرار گیری در فروشگاه
-      </Typography>
+          <Typography variant="body2">محل قرار گیری در فروشگاه</Typography>
         </Box>
         <Box>
           <Box className="flex flex-col justify-end text-left">
@@ -75,13 +74,13 @@ const ProductDetail = () => {
             <Typography variant="body1" fontWeight={"bold"}>
               119,000 <span style={{ fontSize: "12px" }}>تومان</span>
             </Typography>
-          </Box><Button variant="contained" color="primary" fullWidth sx={{mt:4}}>
-        افزودن به سبد خرید
-      </Button>
+          </Box>
+          <Button variant="contained" color="primary" fullWidth sx={{ mt: 4 }}>
+            افزودن به سبد خرید
+          </Button>
         </Box>
       </Box>
-    
-      
+
       <Typography variant="body1" sx={{ marginTop: 2 }}>
         توضیحات محصول: این بخش شامل توضیحات کامل محصول می‌باشد که می‌تواند شامل
         ویژگی‌ها، مزایا و سایر اطلاعات مرتبط باشد.

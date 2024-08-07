@@ -5,6 +5,7 @@ import Verification from "../auth/Verification";
 import MainTemplate from "../mainTemplate/MainTemplate";
 import UserProfilePage from "../profile/UserProfilePage";
 import History from "../profile/history/History";
+import ScanPage from "../scannner/ScanPage";
 
 const AppRoutes: FC = () => {
   return (
@@ -15,6 +16,7 @@ const AppRoutes: FC = () => {
       <Route path="/*" element={<MainTemplate />}>
           <Route path="profile" element={<UserProfilePage />} />
           <Route path="history" element={<History />} />
+          <Route path="scanner" element={<ScanPage />} />
 
           
  

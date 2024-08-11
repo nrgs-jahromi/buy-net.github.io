@@ -10,6 +10,7 @@ interface CartCardProps {
   productName: string;
   count: number;
   amount: number;
+  onCountChange: (newCount: number) => void;
 }
 
 const CartProductCard: FC<CartCardProps> = ({
@@ -17,6 +18,7 @@ const CartProductCard: FC<CartCardProps> = ({
   amount,
   productName: storeName,
   count: initialCount,
+  onCountChange,
 }) => {
   const [isSwipedLeft, setIsSwipedLeft] = useState(false);
   const [translateX, setTranslateX] = useState(0);
@@ -38,13 +40,22 @@ const CartProductCard: FC<CartCardProps> = ({
     trackMouse: true,
   });
 
-  const handleIncrease = () => setCount((prev) => prev + 1);
-  const handleDecrease = () => setCount((prev) => Math.max(prev - 1, 0));
+  const handleIncrease = () => {
+    const newCount = count + 1;
+    setCount(newCount);
+    onCountChange(newCount);
+  };
 
-  if(count === 0)
-  {
-    return<></>
+  const handleDecrease = () => {
+    const newCount = Math.max(count - 1, 0);
+    setCount(newCount);
+    onCountChange(newCount);
+  };
+
+  if (count === 0) {
+    return <></>;
   }
+
   return (
     <Box position="relative" width="100%">
       <Button
@@ -81,19 +92,18 @@ const CartProductCard: FC<CartCardProps> = ({
           style={{ borderRadius: "8px" }}
         />
         <Box width={"100%"} className="flex  justify-between px-4">
-          <Box className=" flex h-full flex-col justify-between ">
+          <Box className="flex h-full flex-col justify-between">
             <Typography variant="body1" fontWeight={"bold"}>
               {storeName}
             </Typography>
             <Typography>{amount.toLocaleString()} تومان</Typography>
           </Box>
         </Box>
-        <Box className=" flex justify-between items-center">
+        <Box className="flex justify-between items-center">
           <IconButton onClick={handleIncrease} color="primary" className="rounded-md">
             <Add />
           </IconButton>
           <Typography variant="caption">{count}</Typography>
-
           <IconButton onClick={handleDecrease} color="primary">
             <Minus />
           </IconButton>

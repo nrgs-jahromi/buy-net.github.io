@@ -30,7 +30,7 @@ export default function FixedBottomNavigation() {
       {
         id: "cart",
         label: "سبد خرید",
-        path: "#",
+        path: "cart",
         icon1: <ShoppingCart size={24} />,
         icon2: <ShoppingCart variant="Bold" size={30} />,
       },

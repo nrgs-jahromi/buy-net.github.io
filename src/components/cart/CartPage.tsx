@@ -3,6 +3,7 @@ import { useState } from "react";
 import CartProductCard from "./CartProductCard";
 import img from "../../assets/E-Wallet-pana (2).svg";
 import theme from "../../theme";
+import PaymentDrawer from "./PaymenDrawer";
 
 const initialProducts = [
   {
@@ -28,6 +29,7 @@ const initialProducts = [
 
 const CartPage = () => {
   const [products, setProducts] = useState(initialProducts);
+  const [isDrawerOpen, setDrawerOpen] = useState(false);
 
   const updateProductCount = (index:number, newCount:number) => {
     const updatedProducts = [...products];
@@ -49,6 +51,13 @@ const CartPage = () => {
   const totalAmount = calculateTotalAmount();
   const totalItems = calculateTotalItems();
 
+  const handleConfirmAndProceed = () => {
+    setDrawerOpen(true); 
+  };
+
+  const toggleDrawer = (open: boolean) => () => {
+    setDrawerOpen(open); 
+  };
   return (
     <Box
       height={"100%"}
@@ -82,7 +91,7 @@ const CartPage = () => {
         justifyContent="space-between"
         alignItems="center"
       >
-        <Button variant="contained" color="primary">
+        <Button variant="contained" color="primary" onClick={handleConfirmAndProceed}>
           تایید و ادامه
         </Button>
         <Box textAlign={"left"}>
@@ -96,6 +105,9 @@ const CartPage = () => {
           </Typography>
         </Box>
       </Box>
+      {isDrawerOpen &&
+      <PaymentDrawer open={isDrawerOpen} toggleDrawer={toggleDrawer} discount={10} totalAmount={totalAmount} totalItems={totalItems} />
+      }
     </Box>
   );
 };

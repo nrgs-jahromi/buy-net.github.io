@@ -41,7 +41,7 @@ const FormikInput: FC<Props> = ({
   };
 
   return (
-    <Box {...containerProps} marginBottom={2}>
+    <Box {...containerProps} marginBottom={2} width={"100%"}>
       <Typography variant={labelVar ? labelVar : "body1"} marginBottom={1}>
         {label}
       </Typography>

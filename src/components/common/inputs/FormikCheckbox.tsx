@@ -6,7 +6,7 @@ import {
   InputLabel,
   Typography,
 } from "@mui/material";
-import { ErrorMessage, Field } from "formik";
+import { ErrorMessage } from "formik";
 import { FC } from "react";
 
 type Props = {

@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import AppRoutes from "./components/routers/AppRoutes";
 import "./index.css";
 

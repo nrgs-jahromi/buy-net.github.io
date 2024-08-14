@@ -1,8 +1,8 @@
-import React, { FC } from "react";
-import * as Yup from "yup";
+import { FC } from "react";
+
 import { Box, Typography, SwipeableDrawer, styled, Button, Divider } from "@mui/material";
 import { grey } from "@mui/material/colors";
-import theme from "../../theme";
+
 import { useFormik, FormikProvider, Form } from "formik";
 import FormikInput from "../common/inputs/FormikInput";
 

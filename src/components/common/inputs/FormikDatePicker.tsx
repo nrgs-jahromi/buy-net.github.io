@@ -25,7 +25,7 @@ const FormikDatePicker: FC<Props> = ({
   maxDate,
   ...datePickerProps
 }) => {
-  const [fields, meta, helpers] = useField<string>(name);
+  const [fields, helpers] = useField<string>(name);
 
   const handleDateChange = (date: any) => {
     if (date) {

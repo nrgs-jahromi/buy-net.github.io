@@ -1,5 +1,5 @@
 import { useFormik, FormikProvider, Form } from "formik";
-import { Box, Button, Typography, useMediaQuery } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import theme from "../../theme";
 import * as Yup from "yup";
 import { useNavigate, useParams } from "react-router";

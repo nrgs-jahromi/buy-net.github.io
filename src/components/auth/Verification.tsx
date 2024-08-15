@@ -3,9 +3,10 @@ import { Box, Button, Typography } from "@mui/material";
 import theme from "../../theme";
 import * as Yup from "yup";
 import { useNavigate, useParams } from "react-router";
-// import logo from "../../assets/MEHRAVE.png";
 import { MuiOtpInput } from "mui-one-time-password-input";
 import { useState, useEffect } from "react";
+import { useUserLogin } from "../../api/auth/loginUser";
+import { useUserVerification } from "../../api/auth/verifyUser";
 
 type LoginFormT = {
   otp: string;
@@ -13,11 +14,13 @@ type LoginFormT = {
 
 const Verification = () => {
   const navigate = useNavigate();
-  const { token } = useParams();
-  // 'token' variable contains the decoded token
-  console.log("Decoded token:", token);
+  const { phoneNumber } = useParams<{ phoneNumber: string }>();
+  const [otp, setOtp] = useState("");
+  const [timer, setTimer] = useState(10); // Initial timer value in seconds
+  const [isTimerRunning, setIsTimerRunning] = useState(true);
 
-  // const isLargeScreen = useMediaQuery("(min-width: 768px)");
+  const { mutate, isLoading, error } = useUserVerification();
+
   const formik = useFormik<LoginFormT>({
     initialValues: {
       otp: "",
@@ -25,26 +28,75 @@ const Verification = () => {
     validationSchema: Yup.object().shape({
       otp: Yup.string().required("Please enter your verification code."),
     }),
-    onSubmit: () => {},
+    onSubmit: (values) => {
+      mutate(
+        {
+          body: {
+            mobile_number: phoneNumber || "", 
+            verification_code: values.otp,
+          },
+        },
+        {
+          onSuccess: (data) => {
+            // Handle successful login
+            // Store the token or navigate to the dashboard
+            console.log("Login successful:", data.token);
+            localStorage.setItem("accessToken" , data.token)
+            navigate("/"); // or wherever you want to navigate on success
+          },
+          onError: (err) => {
+            // Handle error during login
+            console.error("Login error:", err);
+            // Optionally show an error message to the user
+          },
+        }
+      );
+    },
   });
-  const [otp, setOtp] = useState("");
-  const [timer, setTimer] = useState(10); // Initial timer value in seconds
-  const [isTimerRunning, setIsTimerRunning] = useState(true);
 
   const handleChange = (newValue: string) => {
     setOtp(newValue);
-  };
-
-  const handleSubmit = () => {
-    navigate("/");
+    formik.setFieldValue("otp", newValue);
   };
 
   const handleResend = () => {
-    navigate("/login")
-    // setTimer(10);
-    // setIsTimerRunning(true);
-    // setOtp("")
+    navigate("/login");
   };
+
+  useEffect(() => {
+    const expirationTime = localStorage.getItem("verificationExpirationTime");
+    if (expirationTime) {
+      // Parse the expiration time from localStorage
+      const expirationDate = new Date(expirationTime);
+      const now = new Date();
+
+      // Calculate the difference in seconds
+      const timeLeft = Math.max(0, Math.floor((expirationDate.getTime() - now.getTime()) / 1000));
+      setTimer(timeLeft);
+      setIsTimerRunning(timeLeft > 0);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isTimerRunning && timer > 0) {
+      const countdown = setInterval(() => {
+        setTimer((prevTimer) => {
+          if (prevTimer <= 1) {
+            clearInterval(countdown);
+            setIsTimerRunning(false);
+            return 0;
+          }
+          return prevTimer - 1;
+        });
+      }, 1000);
+
+      return () => clearInterval(countdown);
+    }
+  }, [isTimerRunning, timer]);
+
+  // Calculate minutes and seconds
+  const minutes = Math.floor(timer / 60);
+  const seconds = timer % 60;
 
   useEffect(() => {
     if (isTimerRunning) {
@@ -63,32 +115,30 @@ const Verification = () => {
   }, [timer]);
 
   return (
-    <Box className="h-screen w-screen flex  ">
-      <Box className=" flex w-full md:w-1/2 lg:w-2/5 justify-center items-center h-full">
+    <Box className="h-screen w-screen flex">
+      <Box className="flex w-full md:w-1/2 lg:w-2/5 justify-center items-center h-full">
         <FormikProvider value={formik}>
           <Form
             onSubmit={formik.handleSubmit}
             className="h-full w-full p-10 justify-center items-center gap-10 flex flex-col"
           >
-             {/* <img src={logo} height={96} width={96}/> */}
+            {/* <img src={logo} height={96} width={96} alt="Logo" /> */}
             <Box>
               <Typography variant="h5" align="center" fontWeight={"bold"}>
-              احراز هویت
+                احراز هویت
               </Typography>
               <Typography variant="body1" align="center">
-                برای احراز هویت، کد ارسال شده به شماره مویایل خود را وارد کنید
+                برای احراز هویت، کد ارسال شده به شماره موبایل خود را وارد کنید
               </Typography>
             </Box>
-            <Box className=" w-full  ">
-              <Box className="flex flex-col gap-8 my-10 w-full ">
+            <Box className="w-full">
+              <Box className="flex flex-col gap-8 my-10 w-full">
                 <Box>
-                  {" "}
                   <Typography variant="h6" marginBottom={1}>
                     کد تایید
                   </Typography>
                   <MuiOtpInput
                     dir="ltr"
-                    // name="otp"
                     value={otp}
                     length={4}
                     onChange={handleChange}
@@ -106,25 +156,29 @@ const Verification = () => {
                       ارسال مجدد کد تایید
                     </Button>
                   ) : (
-                    `زمان باقی‌مانده: ${timer} ثانیه`
+                    `زمان باقی‌مانده: ${minutes} دقیقه و ${seconds} ثانیه`
                   )}
                 </Typography>
               </Box>
 
               <Button
                 type="submit"
-                onClick={handleSubmit}
                 variant="contained"
                 fullWidth
                 size="medium"
+                disabled={isLoading} // Disable the button while the mutation is loading
               >
                 ادامه
               </Button>
+              {error && (
+                <Typography color="error" variant="body2">
+                  خطا در ورود: {error.message}
+                </Typography>
+              )}
             </Box>
           </Form>
         </FormikProvider>
       </Box>
-      
     </Box>
   );
 };

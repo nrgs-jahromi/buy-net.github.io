@@ -14,7 +14,7 @@ const AppRoutes: FC = () => {
     <BrowserRouter>
       <Routes>
       <Route path="/login" element={<Login />} />
-      <Route path="/verify" element={<Verification />} />
+      <Route path="/verify/:phoneNumber" element={<Verification />} />
       <Route path="/*" element={<MainTemplate />}>
           <Route path="profile" element={<UserProfilePage />} />
           <Route path="history" element={<History />} />

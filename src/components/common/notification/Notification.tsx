@@ -21,7 +21,7 @@ export const notif = (message: string, options?: NotifOptionsT): void => {
   enqueueSnackbar(message, {
     variant: options?.variant || "default",
     action: snackbarAction,
-    autoHideDuration: 50000,
+    autoHideDuration: 5000,
     anchorOrigin: { vertical: "top", horizontal: "left" },
     className: "flex-row-reverse",
     hideIconVariant: true,

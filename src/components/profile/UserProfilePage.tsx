@@ -22,13 +22,14 @@ import { useNavigate } from "react-router-dom";
 import UsernameDrawer from "./UsernameDrower";
 import UserInfoDrawer from "./UserInfoDrawer";
 import { useUserLogout } from "../../api/auth/logout";
+import { useUserDetails } from "../../api/profile/getUserDetail";
 
 const UserProfilePage: React.FC = () => {
   const navigate = useNavigate();
   const [usernameDrawerOpen, setUsernameDrawerOpen] = useState(false);
   const [userInfoDrawerOpen, setUserInfoDrawerOpen] = useState(false);
   const { mutate: logout, isLoading } = useUserLogout();
-
+  const {data:userDetail , isLoading:userDetailIsLoading} = useUserDetails()
   const handleLogout = () => {
     logout(undefined, {
       onSuccess: () => {
@@ -87,8 +88,8 @@ const UserProfilePage: React.FC = () => {
           <Box sx={{ ...glassStyle }}>
             <Box sx={{ ...glassStyle }}>
               <Box sx={{ ...glassStyle, width: 100, height: 100 }}>
-                <Typography variant="h4" fontWeight={"700"}>
-                  ک
+              <Typography variant="h4" fontWeight={"700"}>
+                  {userDetail?.username?.charAt(0)?.toUpperCase() || "ک"}
                 </Typography>
               </Box>
               <Box
@@ -113,7 +114,7 @@ const UserProfilePage: React.FC = () => {
           variant="body1"
           fontWeight={"bold"}
         >
-          کاربر 1234
+           {userDetail?.username}
         </Typography>
       </Box>
       <Box className="p-8 flex flex-col text-natural-400 gap-8">
@@ -175,7 +176,7 @@ const UserProfilePage: React.FC = () => {
               </Typography>
             </Box>
 
-            <Typography variant="body2">09138750959</Typography>
+            <Typography variant="body2">{userDetail?.mobile_number}</Typography>
           </ListItem>
           <Divider />
           <ListItem
@@ -204,8 +205,8 @@ const UserProfilePage: React.FC = () => {
               endIcon={<ArrowLeft2 size={16} />}
               onClick={toggleUsernameDrawer(true)}
             >
-              کاربر 1234
-            </Button>
+           {userDetail?.username}
+          </Button>
           </ListItem>
           <Divider />
 
@@ -235,7 +236,7 @@ const UserProfilePage: React.FC = () => {
               endIcon={<ArrowLeft2 size={16} />}
               onClick={toggleUserInfoDrawer(true)}
             >
-              نرگس{" "}
+              {userDetail?.first_name ?? "ویرایش"  }
             </Button>
           </ListItem>
         </Box>

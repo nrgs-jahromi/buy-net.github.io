@@ -1,27 +1,28 @@
-import React, { FC } from "react";
-import * as Yup from "yup";
+import React, { FC, useEffect } from "react";
 import {
   Box,
   Typography,
   SwipeableDrawer,
-  styled,
   Button,
+  styled,
 } from "@mui/material";
 import { grey } from "@mui/material/colors";
-import theme from "../../theme";
 import { useNavigate } from "react-router-dom";
 import { Form, FormikProvider, useFormik } from "formik";
+import { useUserDetails } from "../../api/profile/getUserDetail";
 import FormikInput from "../common/inputs/FormikInput";
 import FormikSelectInput from "../common/inputs/FormikSelectInput";
 import FormikDatePicker from "../common/inputs/FormikDatePicker";
+import { useUpdateUserDetails } from "../../api/profile/updateUserDetial";
+import { notif } from "../common/notification/Notification";
 
-type LoginFormT = {
-  username: string;
-};
+type LoginFormT = Partial<UserDetailsT>
+
 interface UserProfileDrawerProps {
   open: boolean;
   toggleDrawer: (open: boolean) => () => void;
 }
+
 const drawerBleeding = 56;
 const Puller = styled("div")(({ theme }) => ({
   width: 30,
@@ -35,16 +36,44 @@ const Puller = styled("div")(({ theme }) => ({
 
 const UserInfoDrawer: FC<UserProfileDrawerProps> = ({ open, toggleDrawer }) => {
   const navigate = useNavigate();
+  const { data: userDetail, isLoading: userDetailIsLoading } = useUserDetails();
+  const { mutate: updateUserDetails, isLoading: isUpdating } = useUpdateUserDetails();
+
   const formik = useFormik<LoginFormT>({
     initialValues: {
-      username: "",
+      first_name: userDetail?.first_name || null,
+      last_name: userDetail?.last_name || null,
+      birth_date: userDetail?.birth_date || null,
+      gender: userDetail?.gender || null,
     },
-    validationSchema: Yup.object().shape({
-      username: Yup.string().required("لطفا این قسمت را خالی نگذارید"),
-    }),
+    enableReinitialize: true, 
     onSubmit: (values) => {
-      console.log("Submitted values:", values);
-      navigate("/verify");
+      const updatedFields: Partial<LoginFormT> = {};
+
+      if (values.first_name !== userDetail?.first_name) {
+        updatedFields.first_name = values.first_name;
+      }
+      if (values.last_name !== userDetail?.last_name) {
+        updatedFields.last_name = values.last_name;
+      }
+      if (values.birth_date !== userDetail?.birth_date) {
+        updatedFields.birth_date = values.birth_date;
+      }
+      if (values.gender !== userDetail?.gender) {
+        updatedFields.gender = values.gender;
+      }
+
+      
+        updateUserDetails(updatedFields, {
+          onSuccess: () => {
+            notif("اطلاعات شما با موفقیت ویرایش شد.", {variant:"success"})
+            toggleDrawer(false)()
+          },
+          onError: (error) => {
+           notif("مشکلی در ویرایش اطلاعات به وجود آمده است.", {variant:"error"})
+          },
+        });
+      
     },
   });
 
@@ -63,7 +92,6 @@ const UserInfoDrawer: FC<UserProfileDrawerProps> = ({ open, toggleDrawer }) => {
         exit: 500,
       }}
     >
-      {/* <Puller/> */}
       <Box className="p-6">
         <FormikProvider value={formik}>
           <Form
@@ -75,23 +103,29 @@ const UserInfoDrawer: FC<UserProfileDrawerProps> = ({ open, toggleDrawer }) => {
             </Typography>
             <Box className="flex flex-col gap-2 w-full">
               <FormikInput name="first_name" label="نام " />
-                 <FormikInput name="last_name" label="نام خانوادگی" />
+              <FormikInput name="last_name" label="نام خانوادگی" />
               <Box className="grid grid-cols-2 gap-4  w-full">
-              <FormikDatePicker name="birth_date" label="تاریخ تولد" />
-              <FormikSelectInput
-                name="gender"
-               sx={{height:56}}
-                label="جنسیت"
-                options={[
-                  { value: "female", label: "زن" },
-                  { value: "male", label: "مرد" },
-                ]}
-              />
+                <FormikDatePicker name="birth_date" label="تاریخ تولد" />
+                <FormikSelectInput
+                  name="gender"
+                  sx={{ height: 56 }}
+                  label="جنسیت"
+                  options={[
+                    { value: "M", label: "مرد" },
+                    { value: "F", label: "زن" },
+                    { value: "O", label: "سایر" },
+                  ]}
+                />
               </Box>
-             
             </Box>
-            <Button type="submit" variant="contained" fullWidth size="medium">
-              ثبت
+            <Button
+              type="submit"
+              variant="contained"
+              fullWidth
+              size="medium"
+              disabled={isUpdating}
+            >
+              {isUpdating ? "در حال به‌روزرسانی..." : "ثبت"}
             </Button>
           </Form>
         </FormikProvider>

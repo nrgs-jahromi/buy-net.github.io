@@ -1,10 +1,17 @@
-import { Box, IconButton, InputAdornment, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  InputAdornment,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { ErrorMessage, useField } from "formik";
 import { FC } from "react";
 import DatePicker, { DatePickerProps } from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import { Calendar } from "iconsax-react";
+import "react-multi-date-picker/styles/colors/red.css";
 import { Variant } from "@mui/material/styles/createTypography";
 
 type Props = {
@@ -25,7 +32,7 @@ const FormikDatePicker: FC<Props> = ({
   maxDate,
   ...datePickerProps
 }) => {
-  const [fields, helpers] = useField<string>(name);
+  const [fields, meta, helpers] = useField<string>(name);
 
   const handleDateChange = (date: any) => {
     if (date) {
@@ -44,6 +51,7 @@ const FormikDatePicker: FC<Props> = ({
       <DatePicker
         value={fields.value ? new Date(fields.value) : null}
         onChange={handleDateChange}
+        className="red"
         containerStyle={{
           width: "100%",
         }}
@@ -61,7 +69,10 @@ const FormikDatePicker: FC<Props> = ({
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
-                  <IconButton aria-label="toggle password visibility" edge="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    edge="end"
+                  >
                     <Calendar />
                   </IconButton>
                 </InputAdornment>

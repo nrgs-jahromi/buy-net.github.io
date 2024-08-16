@@ -7,6 +7,7 @@ import { MuiOtpInput } from "mui-one-time-password-input";
 import { useState, useEffect } from "react";
 import { useUserLogin } from "../../api/auth/loginUser";
 import { useUserVerification } from "../../api/auth/verifyUser";
+import { notif } from "../common/notification/Notification";
 
 type LoginFormT = {
   otp: string;
@@ -16,7 +17,7 @@ const Verification = () => {
   const navigate = useNavigate();
   const { phoneNumber } = useParams<{ phoneNumber: string }>();
   const [otp, setOtp] = useState("");
-  const [timer, setTimer] = useState(10); // Initial timer value in seconds
+  const [timer, setTimer] = useState(10);
   const [isTimerRunning, setIsTimerRunning] = useState(true);
 
   const { mutate, isLoading, error } = useUserVerification();
@@ -32,22 +33,20 @@ const Verification = () => {
       mutate(
         {
           body: {
-            mobile_number: phoneNumber || "", 
+            mobile_number: phoneNumber || "",
             verification_code: values.otp,
           },
         },
         {
           onSuccess: (data) => {
-            // Handle successful login
-            // Store the token or navigate to the dashboard
             console.log("Login successful:", data.token);
-            localStorage.setItem("accessToken" , data.token)
-            navigate("/"); // or wherever you want to navigate on success
+            localStorage.setItem("accessToken", data.token);
+            notif("با موفقیت وارد شدید.", { variant: "success" });
+            navigate("/");
           },
           onError: (err) => {
-            // Handle error during login
             console.error("Login error:", err);
-            // Optionally show an error message to the user
+            notif("کد وارد شده معتبر نمی‌باشد.", { variant: "error" });
           },
         }
       );
@@ -71,7 +70,10 @@ const Verification = () => {
       const now = new Date();
 
       // Calculate the difference in seconds
-      const timeLeft = Math.max(0, Math.floor((expirationDate.getTime() - now.getTime()) / 1000));
+      const timeLeft = Math.max(
+        0,
+        Math.floor((expirationDate.getTime() - now.getTime()) / 1000)
+      );
       setTimer(timeLeft);
       setIsTimerRunning(timeLeft > 0);
     }

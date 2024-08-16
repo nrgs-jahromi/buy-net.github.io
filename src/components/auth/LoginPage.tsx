@@ -16,7 +16,6 @@ import { useUserLogin } from "../../api/auth/loginUser";
 import { notif } from "../common/notification/Notification";
 import { enqueueSnackbar } from "notistack";
 
-
 type LoginFormT = {
   mobileNumber: string;
 };
@@ -90,12 +89,14 @@ const Login = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      localStorage.setItem("verificationExpirationTime", loginData!.expire_time);
-     
+      localStorage.setItem(
+        "verificationExpirationTime",
+        loginData!.expire_time
+      );
+      notif("کد احراز هویت برای شما پیامک شد.", { variant: "success" });
       navigate(`/verify/${formik.values.mobileNumber}`);
     } else if (isError) {
-    
-
+      notif("َشماره وارد شده معتبر نمی‌باشد", { variant: "error" });
     }
   }, [isSuccess, isError]);
   return (

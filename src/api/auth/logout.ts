@@ -4,7 +4,7 @@ import { ApiError, fetcher } from "../config";
 type ResT = null;
 
 const logoutUser: MutationFunction<ResT, void> = async () => {
-  await fetcher.post<ResT>("/logout/");
+  await fetcher.post<ResT>("/users/logout/");
   return null;
 };
 

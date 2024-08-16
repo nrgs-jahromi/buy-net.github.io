@@ -21,12 +21,25 @@ import {
 import { useNavigate } from "react-router-dom";
 import UsernameDrawer from "./UsernameDrower";
 import UserInfoDrawer from "./UserInfoDrawer";
+import { useUserLogout } from "../../api/auth/logout";
 
 const UserProfilePage: React.FC = () => {
   const navigate = useNavigate();
   const [usernameDrawerOpen, setUsernameDrawerOpen] = useState(false);
   const [userInfoDrawerOpen, setUserInfoDrawerOpen] = useState(false);
+  const { mutate: logout, isLoading } = useUserLogout();
 
+  const handleLogout = () => {
+    logout(undefined, {
+      onSuccess: () => {
+        localStorage.removeItem("accessToken"); 
+        navigate("/login"); 
+      },
+      onError: (error) => {
+        console.error("Error logging out:", error); 
+      }
+    });
+  };
   const toggleUsernameDrawer = (open: boolean) => () => {
     setUsernameDrawerOpen(open);
   };
@@ -226,7 +239,7 @@ const UserProfilePage: React.FC = () => {
             </Button>
           </ListItem>
         </Box>
-        <Button onClick={()=>navigate("/login")}>خروج از حساب کاربری</Button>
+        <Button onClick={handleLogout} >خروج از حساب کاربری</Button>
       </Box>
       {usernameDrawerOpen && (
         <UsernameDrawer open={usernameDrawerOpen} toggleDrawer={toggleUsernameDrawer} />

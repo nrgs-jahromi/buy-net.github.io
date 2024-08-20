@@ -1,0 +1,10 @@
+#html5-qrcode-button-camera-stop,
+#html5-qrcode-button-camera-permission,
+#html5-qrcode-anchor-scan-type-change,
+#html5-qrcode-button-choose-file {
+    visibility: hidden;
+    display: none;
+}
+#html5-qrcode-button-camera-stop img {
+    display: none;
+}

@@ -63,7 +63,7 @@ const ScanPage = () => {
           productName={foundProduct}
         />
       )}
-      <div ref={bottomRef} style={{ position: 'absolute', bottom: 100, left: '50%', transform: 'translateX(-50%)' }} />
+      <div ref={bottomRef} style={{ position: 'absolute', bottom: 130, left: '50%', transform: 'translateX(-50%)' }} />
     </Box>
   );
 };

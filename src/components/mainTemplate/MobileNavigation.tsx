@@ -47,7 +47,7 @@ export default function FixedBottomNavigation() {
         label: "",
         icon1: <Check size={24} />,
         icon2: <Check variant="Bold" size={30} />,
-        path: "#",
+        path: "scanner",
       },
       {
         id: "Search",

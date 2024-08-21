@@ -96,7 +96,7 @@ const PaymentDrawer: FC<PaymentDrawerProps> = ({
             </Box>
             <Box className="w-full flex justify-between items-center">
             <Typography variant="body1" >
-            تخفیف
+            سود شما از خرید
           </Typography>
           <Typography variant="body1" fontWeight={"bold"}>
           {discount.toLocaleString()} 

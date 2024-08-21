@@ -3,7 +3,7 @@ import { useState } from "react";
 import CartProductCard from "./CartProductCard";
 import img from "../../assets/E-Wallet-pana (2).svg";
 import theme from "../../theme";
-import PaymentDrawer from "./PaymenDrawer";
+import PaymentDrawer from "./PaymentDrawer";
 
 const initialProducts = [
   {

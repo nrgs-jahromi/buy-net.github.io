@@ -96,10 +96,10 @@ const theme = createTheme({
           borderRadius: "8px",
           // padding:"0 14px",
           "& .MuiOutlinedInput-notchedOutline": {
-            border: `0.5px solid #85949B`,
+            border: `0.5px solid #FFE4E8`,
           },
           "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-            border: `1px solid #65777F`, // رنگ دلخواه برای فوکوس
+            border: `1px solid #FFE4E8`, // رنگ دلخواه برای فوکوس
           },
         },
         input: {

@@ -14,7 +14,7 @@ type ResT = {
 };
 
 const verifyUser: MutationFunction<ResT, DataT> = async (data) => {
-  const { data: dataRes } = await fetcher.post<ResT>("/users/verify/", data.body);
+  const { data: dataRes } = await fetcher.post<ResT>("/customers/verify/", data.body);
   return dataRes;
 };
 

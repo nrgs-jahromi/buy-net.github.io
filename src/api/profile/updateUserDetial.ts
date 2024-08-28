@@ -12,7 +12,7 @@ const updateUserDetails: MutationFunction<ResT, UpdateUserDetailsT> = async (
   updatedFields
 ) => {
   const { data: dataRes } = await fetcher.put<ResT>(
-    "/users/edit/",
+    "/customers/edit/",
     updatedFields
   );
   return dataRes;

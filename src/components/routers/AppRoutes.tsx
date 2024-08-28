@@ -8,6 +8,7 @@ import History from "../profile/history/History";
 import ScanPage from "../scannner/ScanPage";
 import ProductDetail from "../product/ProductDetail";
 import CartPage from "../cart/CartPage";
+import SearchPage from "../search/SearchPage";
 
 const AppRoutes: FC = () => {
   return (
@@ -18,6 +19,7 @@ const AppRoutes: FC = () => {
       <Route path="/*" element={<MainTemplate />}>
           <Route path="profile" element={<UserProfilePage />} />
           <Route path="history" element={<History />} />
+          <Route path="search" element={<SearchPage />} />
           <Route path="scanner" element={<ScanPage />} />
           <Route path="cart" element={<CartPage />} />
           <Route path="products/:productId" element={<ProductDetail />} />

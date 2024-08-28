@@ -6,7 +6,7 @@ type ResT = UserDetailsT;
 type QueryKey = ["userDetails"];
 
 const getUserDetails: QueryFunction<ResT, QueryKey> = async (key) => {
-  const { data: dataRes } = await fetcher.get<ResT>("/users/info/");
+  const { data: dataRes } = await fetcher.get<ResT>("/customers/info/");
   return dataRes;
 };
 

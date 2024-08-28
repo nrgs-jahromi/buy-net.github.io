@@ -13,7 +13,7 @@ type ResT = {
 };
 const loginUser: MutationFunction<ResT, DataT> = async (data) => {
   const { data: dataRes } = await fetcher.post<ResT>(
-    "/users/login/",
+    "/customers/login/",
     data.body
   );
   return dataRes;

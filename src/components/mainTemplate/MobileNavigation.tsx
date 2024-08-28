@@ -54,7 +54,7 @@ export default function FixedBottomNavigation() {
         label: "جستجو",
         icon1: <SearchNormal1 size={24} />,
         icon2: <SearchNormal1 variant="Bold" size={30} />,
-        path: "#",
+        path: "search",
       },
       {
         id: "profile",

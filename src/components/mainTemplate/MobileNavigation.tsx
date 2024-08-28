@@ -37,7 +37,7 @@ export default function FixedBottomNavigation() {
       {
         id: "explore",
         label: "فروشگاه",
-        path: "#",
+        path: "explore",
         icon1: <Flash size={24} />,
         icon2: <Flash variant="Bold" size={30} />,
       },

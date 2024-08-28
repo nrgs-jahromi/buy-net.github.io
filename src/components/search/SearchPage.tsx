@@ -45,13 +45,15 @@ const SearchPage = () => {
   );
 
   return (
-    <Box className="w-full p-8">
+    <Box className="w-full px-8">
       <Box
         sx={{
           position: "sticky",
           top: 0,
           zIndex: 1,
           backgroundColor: theme.palette.background.default,
+          mb:3,
+          pt:4
         }}
         className="space-y-4"
       >

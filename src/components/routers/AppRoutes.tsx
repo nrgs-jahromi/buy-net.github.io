@@ -9,6 +9,7 @@ import ScanPage from "../scannner/ScanPage";
 import ProductDetail from "../product/ProductDetail";
 import CartPage from "../cart/CartPage";
 import SearchPage from "../search/SearchPage";
+import ExplorePage from "../explore/ExplorePage";
 
 const AppRoutes: FC = () => {
   return (
@@ -21,6 +22,7 @@ const AppRoutes: FC = () => {
           <Route path="history" element={<History />} />
           <Route path="search" element={<SearchPage />} />
           <Route path="scanner" element={<ScanPage />} />
+          <Route path="explore" element={<ExplorePage />} />
           <Route path="cart" element={<CartPage />} />
           <Route path="products/:productId" element={<ProductDetail />} />
 

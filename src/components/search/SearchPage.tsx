@@ -2,48 +2,48 @@ import { Box, Chip, Divider, InputAdornment, Paper, TextField, Typography } from
 import theme from "../../theme";
 import { SearchNormal1 } from "iconsax-react";
 import SearchItem from "./SearchItem";
-import { useState } from "react";
-import img from "../../assets/DefaultImage.png";
-
-// دیتای فیک برای محصولات
-const fakeProducts = [
-  { id: "1", image: img, name: "محصول 1", amount: 25000, category: "1" },
-  { id: "2", image: img, name: "محصول 2", amount: 45000, category: "2" },
-  { id: "3", image: img, name: "محصول 3", amount: 75000, category: "1" },
-  { id: "4", image: img, name: "محصول 4", amount: 32000, category: "3" },
-  { id: "5", image: img, name: "محصول 5", amount: 52000, category: "2" },
-  { id: "6", image: img, name: "محصول 6", amount: 66000, category: "3" },
-  { id: "7", image: img, name: "محصول 7", amount: 72000, category: "1" },
-  { id: "8", image: img, name: "محصول 8", amount: 85000, category: "2" },
-  // محصولات بیشتر
-];
-
-// دیتای فیک برای دسته‌بندی‌ها
-const categories = [
-  { id: "1", name: "دسته 1" },
-  { id: "2", name: "دسته 2" },
-  { id: "3", name: "دسته 3" },
-  // دسته‌های بیشتر
-];
+import { useEffect, useState } from "react";
+import { useCategories } from "../../api/product/getCategories";
+import { useProducts } from "../../api/product/getProductsList";
 
 const SearchPage = () => {
   const [searchValue, setSearchValue] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
+  const store_id = "CTBYR9LM";
+
+  const { data: categories = [], isLoading: isCategoriesLoading, error: categoriesError } = useCategories(store_id);
+
+  const { data: productsData, isLoading: isProductsLoading, error: productsError } = useProducts(
+    { store_id, params: { q: searchValue } }
+  );
+
   const handleCategoryClick = (categoryId: string) => {
     setSelectedCategories((prevCategories) =>
       prevCategories.includes(categoryId)
-        ? prevCategories.filter((c) => c !== categoryId) // حذف دسته اگر انتخاب شده باشد
-        : [...prevCategories, categoryId] // اضافه کردن دسته اگر انتخاب نشده باشد
+        ? prevCategories.filter((c) => c !== categoryId)
+        : [...prevCategories, categoryId]
     );
   };
 
-  const filteredProducts = fakeProducts.filter(
-    (product) =>
-      (selectedCategories.length === 0 || selectedCategories.includes(product.category)) &&
-      product.name.includes(searchValue)
-  );
+  useEffect(()=>{
+    console.log("selectedCategories" , selectedCategories);
+    
+  },[selectedCategories])
+  // Check if productsData and productsData.results are defined before filtering
+  const selectedCategoryNames = categories
+  .filter(category => selectedCategories.includes(String(category.id)))
+  .map(category => category.name);
 
+const filteredProducts = productsData?.filter(
+  (product) =>
+    (selectedCategoryNames.length === 0 || 
+     product.category_names?.some(categoryName => selectedCategoryNames.includes(categoryName))) &&
+    product.name.includes(searchValue)
+) || [];
+
+  console.log("filteredProducts" , filteredProducts);
+  
   return (
     <Box className="w-full px-8">
       <Box
@@ -52,8 +52,8 @@ const SearchPage = () => {
           top: 0,
           zIndex: 1,
           backgroundColor: theme.palette.background.default,
-          mb:3,
-          pt:4
+          mb: 3,
+          pt: 4,
         }}
         className="space-y-4"
       >
@@ -72,7 +72,6 @@ const SearchPage = () => {
             style: {
               maxHeight: "48px",
               borderRadius: "50px",
-              border: `1px solid ${theme.palette.primary.light}`,
             },
             startAdornment: (
               <InputAdornment position="start">
@@ -82,20 +81,30 @@ const SearchPage = () => {
           }}
         />
         <Box className="w-full overflow-auto flex gap-2">
-          {categories.map((category) => (
-            <Chip
-              key={category.id}
-              label={category.name}
-              onClick={() => handleCategoryClick(category.id)}
-              color={selectedCategories.includes(category.id) ? "primary" : "default"}
-            />
-          ))}
+          {isCategoriesLoading ? (
+            <Typography>در حال بارگذاری...</Typography>
+          ) : categoriesError ? (
+            <Typography>خطایی رخ داد</Typography>
+          ) : (
+            categories.map((category) => (
+              <Chip
+                key={category.id}
+                label={category.name}
+                onClick={() => handleCategoryClick(String(category.id))}
+                color={selectedCategories.includes(String(category.id)) ? "primary" : "default"}
+              />
+            ))
+          )}
         </Box>
         <Divider />
       </Box>
-      <Box className="h-full overflow-auto space-y-3" height={"100%"}>
-        {filteredProducts.length > 0 ? (
-          filteredProducts.map((item) => <SearchItem key={item.id} item={item} />)
+      <Box className="h-full overflow-auto space-y-3 " height={"100%"}>
+        {isProductsLoading ? (
+          <Typography>در حال بارگذاری محصولات...</Typography>
+        ) : productsError ? (
+          <Typography>خطایی رخ داد</Typography>
+        ) : filteredProducts.length > 0 ? (
+          filteredProducts.map((item) => <SearchItem  item={item} />)
         ) : (
           <Typography>موردی یافت نشد</Typography>
         )}

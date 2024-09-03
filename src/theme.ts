@@ -96,7 +96,7 @@ const theme = createTheme({
           borderRadius: "8px",
           // padding:"0 14px",
           "& .MuiOutlinedInput-notchedOutline": {
-            border: `0.5px solid #FFE4E8`,
+            border: `0.5px solid #E5E5E5`,
           },
           "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
             border: `1px solid #FFE4E8`, // رنگ دلخواه برای فوکوس
@@ -127,8 +127,8 @@ const theme = createTheme({
     MuiPaper: {
       styleOverrides: {
         root: {
-          // border: `0.5px solid #E1DEFA`,
-          // boxShadow: "none",
+          border: `0.7px solid #D4D4D4`,
+          boxShadow: "none",
           borderRadius: "8px",
           backgroundColor: "white",
           height: "fit-content",

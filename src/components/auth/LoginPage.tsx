@@ -92,9 +92,7 @@ const Login = () => {
     if (storeId) {
       localStorage.setItem("storeId", storeId);
     }
-    else{
-      localStorage.removeItem("storeId")
-    }
+   
   }, [storeId]);
 
   useEffect(() => {

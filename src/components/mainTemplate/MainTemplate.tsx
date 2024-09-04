@@ -1,20 +1,62 @@
 import { Box, useMediaQuery } from "@mui/material";
 import { Outlet } from "react-router";
 import FixedBottomNavigation from "./MobileNavigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useGeneralInfo } from "../../api/store/getGeneralInfo";
+import theme from "../../theme";
 // import { getFromLocalStorage } from "../../utils/localStorage";
 // import { LS_ACCESS_TOKEN } from "../../constants/localStorage";
 
+type StoreInfoT = {
+  name: string;
+  color: string;
+  icon: string;
+};
 const MainTemplate = () => {
   const isLargeScreen = useMediaQuery("(min-width: 768px)");
 
-  // useEffect(() => {
-  //   const accessToken = getFromLocalStorage(LS_ACCESS_TOKEN)
+  const [storeId, setStoreId] = useState<string>("");
+  const [storeInfo, setStoreInfo] = useState<StoreInfoT | null>(null);
 
-  //   if (!accessToken) {
-  //     window.location.href = "/login";
-  //   }
-  // }, []);
+  const { data, isLoading, isError, refetch } = useGeneralInfo(storeId);
+
+  useEffect(() => {
+    const savedStoreId = localStorage.getItem("storeId");
+    if (savedStoreId) {
+      setStoreId(savedStoreId);
+    }
+  }, []);
+
+  useEffect(() => {
+    const savedStoreInfo = localStorage.getItem("storeGeneralInfo");
+    if (savedStoreInfo) {
+      setStoreInfo(JSON.parse(savedStoreInfo));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (data) {
+      const { name, color, icon } = data;
+      const storeInfoObj: StoreInfoT = { name, color, icon };
+
+      localStorage.setItem("storeName", name);
+      localStorage.setItem("storeColor", color);
+      localStorage.setItem("storeIcon", icon);
+      setStoreInfo(storeInfoObj);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (storeInfo) {
+      // Dynamically update theme color
+      const themeColorMetaTag = document.querySelector(
+        'meta[name="theme-color"]'
+      );
+      if (themeColorMetaTag) {
+        themeColorMetaTag.setAttribute("content", storeInfo.color);
+      }
+    }
+  }, [storeInfo]);
 
   return (
     <Box className="flex flex-row h-screen w-screen ">

@@ -42,7 +42,7 @@ const Verification = () => {
             console.log("Login successful:", data.token);
             localStorage.setItem("accessToken", data.token);
             notif("با موفقیت وارد شدید.", { variant: "success" });
-            navigate("/");
+            navigate("/explore");
           },
           onError: (err) => {
             console.error("Login error:", err);
@@ -59,7 +59,7 @@ const Verification = () => {
   };
 
   const handleResend = () => {
-    navigate("/login");
+    navigate("/");
   };
 
   useEffect(() => {

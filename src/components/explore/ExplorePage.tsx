@@ -8,6 +8,7 @@ import { useSwipeable } from "react-swipeable";
 import BorderCard from "./BorderCard";
 import img from "../../assets/DefaultImage.png";
 import Slider from "react-slick";
+import { API_BASE_URL } from "../../api/config";
 // دیتای نمونه برای کارت‌ها
 const onBordData = [
   { id: "1", img: img },
@@ -46,7 +47,9 @@ const ExplorePage = () => {
   };
 
   const handlePrevCard = () => {
-    handleCardChange((currentCardIndex - 1 + onBordData.length) % onBordData.length);
+    handleCardChange(
+      (currentCardIndex - 1 + onBordData.length) % onBordData.length
+    );
   };
   useEffect(() => {
     const timer = setInterval(handleNextCard, 5000); // تغییر هر ۵ ثانیه
@@ -57,9 +60,9 @@ const ExplorePage = () => {
     <Box className="p-8 space-y-3">
       <Box className="flex justify-start gap-4 items-center">
         <img
-          src={logo}
-          height={60}
-          width={60}
+          src={API_BASE_URL + localStorage.getItem("storeIcon") || logo}
+          height={70}
+          width={70}
           style={{ borderRadius: "50%" }}
         />
         <Typography
@@ -67,28 +70,27 @@ const ExplorePage = () => {
           fontWeight={"bold"}
           color={theme.palette.primary.main}
         >
-          افق کوروش
+          {localStorage.getItem("storeName")}
         </Typography>
       </Box>
       <Slider {...settings}>
-          {onBordData.map((image, index) => (
-            <Box
-              key={index}
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "150px",
-                padding: "0 20px",
-                bgcolor:theme.palette.grey[400],
-                borderRadius: "16px",
+        {onBordData.map((image, index) => (
+          <Box
+            key={index}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "150px",
+              padding: "0 20px",
+              bgcolor: theme.palette.grey[400],
+              borderRadius: "16px",
+            }}
+            onClick={() => navigate(`products/${image.id}`)}
+          >
+            {image.id}
 
-              }}
-              onClick={() => navigate(`products/${image.id}`)}
-            >
-                {image.id}
-                
-              {/* <img
+            {/* <img
                 src={image.img}
                 onClick={() => navigate(image.id)}
                 style={{
@@ -99,9 +101,9 @@ const ExplorePage = () => {
                   objectFit: "cover",
                 }}
               /> */}
-            </Box>
-          ))}
-        </Slider>
+          </Box>
+        ))}
+      </Slider>
       <Box className="flex w-full items-center justify-between">
         <Typography fontWeight={"bold"}>تخفیفات ویژه </Typography>
         <Button

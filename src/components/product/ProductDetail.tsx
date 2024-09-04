@@ -6,10 +6,19 @@ import "slick-carousel/slick/slick-theme.css";
 import img1 from "../../assets/E-Wallet-pana (1).svg";
 import img2 from "../../assets/QR Code-amico.svg";
 import img3 from "../../assets/Add to Cart-amico.svg";
+import { useProductDetails } from "../../api/product/getProductDetail";
+import { useParams } from "react-router-dom";
 
 const ProductDetail = () => {
   const images = [img1, img2, img3];
+  const { productId } = useParams<{ productId: string }>();
+  const store_id = localStorage.getItem("storeId");
 
+  const {
+    data: productDetails,
+    isLoading,
+    isError,
+  } = useProductDetails(store_id!, productId! );
   const settings = {
     customPaging: function (i: any) {
       return (
@@ -58,9 +67,9 @@ const ProductDetail = () => {
             لوازم التحریر / دفتر / فنری
           </Typography>
           <Typography variant="h6" fontWeight="bold">
-            نام محصول
+            {productDetails?.name}{" "}
           </Typography>
-          <Typography variant="body2">محل قرار گیری در فروشگاه</Typography>
+          <Typography variant="body2">{productDetails?.location}</Typography>
         </Box>
         <Box>
           <Box className="flex flex-col justify-end text-left">
@@ -69,7 +78,7 @@ const ProductDetail = () => {
               color="textSecondary"
               sx={{ textDecoration: "line-through" }}
             >
-              130,000
+              {productDetails?.price}
             </Typography>
             <Typography variant="body1" fontWeight={"bold"}>
               119,000 <span style={{ fontSize: "12px" }}>تومان</span>
@@ -81,10 +90,7 @@ const ProductDetail = () => {
         </Box>
       </Box>
 
-      <Typography variant="body1" sx={{ marginTop: 2 }}>
-        توضیحات محصول: این بخش شامل توضیحات کامل محصول می‌باشد که می‌تواند شامل
-        ویژگی‌ها، مزایا و سایر اطلاعات مرتبط باشد.
-      </Typography>
+      <Typography variant="body1" sx={{ marginTop: 2 }}>{productDetails?.description}</Typography>
     </Box>
   );
 };

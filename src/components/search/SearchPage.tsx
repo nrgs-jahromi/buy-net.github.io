@@ -10,12 +10,13 @@ const SearchPage = () => {
   const [searchValue, setSearchValue] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
-  const store_id = "CTBYR9LM";
+  const store_id = localStorage.getItem("storeId")!;
 
-  const { data: categories = [], isLoading: isCategoriesLoading, error: categoriesError } = useCategories(store_id);
+  const { data: categories = [], isLoading: isCategoriesLoading, error: categoriesError } = useCategories(store_id!);
 
   const { data: productsData, isLoading: isProductsLoading, error: productsError } = useProducts(
     { store_id, params: { q: searchValue } }
+    
   );
 
   const handleCategoryClick = (categoryId: string) => {

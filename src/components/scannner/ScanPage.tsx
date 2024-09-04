@@ -3,22 +3,36 @@ import { useState, useEffect, useRef } from "react";
 import { Html5QrcodeScanner, Html5QrcodeSupportedFormats } from "html5-qrcode";
 import ProductPopover from "./ProductPreviewCard";
 import './customScannerStyles.css';
+import { useProductDetails } from "../../api/product/getProductDetail";
+import { notif } from "../common/notification/Notification";
 
 const ScanPage = () => {
-  const [foundProduct, setFoundProduct] = useState<string | undefined>(undefined);
+  const [barcode, setBarcode] = useState<string | undefined>(undefined);
   const qrScannerRef = useRef<Html5QrcodeScanner | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
+  const store_id = localStorage.getItem("storeId");
+
+  const {
+    data: productDetails,
+    isLoading,
+    isError,
+  } = useProductDetails(store_id!, barcode! );
+
   const handleScanSuccess = (decodedText: string) => {
-    setFoundProduct(decodedText);
+    setBarcode(decodedText); // پس از اسکن، بارکد را تنظیم کنید
   };
 
   const handleClose = () => {
-    setFoundProduct(undefined);
+    setBarcode(undefined);
   };
 
+  useEffect(()=>{
+    if(isError)
+      notif("بارکد شناسایی شده معتبر نمی‌باشد.", {variant:"error"})
+  },[isError])
   useEffect(() => {
-    if (!qrScannerRef.current) { // چک کردن اینکه اسکنر قبلاً ساخته نشده باشد
+    if (!qrScannerRef.current) {
       qrScannerRef.current = new Html5QrcodeScanner(
         "reader", 
         { 
@@ -38,7 +52,6 @@ const ScanPage = () => {
 
       qrScannerRef.current.render(handleScanSuccess, () => {});
 
-      // ست کردن اتوماتیک کلیک روی دکمه‌ی درخواست دسترسی به دوربین
       const cameraPermissionButton = document.getElementById("html5-qrcode-button-camera-permission");
       if (cameraPermissionButton) {
         cameraPermissionButton.click();
@@ -48,7 +61,7 @@ const ScanPage = () => {
     return () => {
       if (qrScannerRef.current) {
         qrScannerRef.current.clear();
-        qrScannerRef.current = null; // پاک کردن رفرنس به اسکنر
+        qrScannerRef.current = null;
       }
     };
   }, []);
@@ -56,11 +69,12 @@ const ScanPage = () => {
   return (
     <Box className="w-full h-full bg-black" sx={{ position: "relative" }}>
       <div id="reader" style={{ width: "100%", height: "100%" }} />
-      {foundProduct && (
+      {productDetails && (
         <ProductPopover
           anchorEl={bottomRef.current}
           handleClose={handleClose}
-          productName={foundProduct}
+          productName={productDetails.name} // نمایش نام محصول
+          productDetails={productDetails} // سایر جزئیات محصول
         />
       )}
       <div ref={bottomRef} style={{ position: 'absolute', bottom: 130, left: '50%', transform: 'translateX(-50%)' }} />

@@ -3,17 +3,21 @@ import React, { useState } from "react";
 import Img from "../../assets/E-Wallet-pana.svg";
 import { Add } from "iconsax-react";
 import { useNavigate } from "react-router-dom";
+import { ProductDetailsResponse } from "../../api/product/getProductDetail";
+import ProductDetail from "../product/ProductDetail";
 
 interface ProductPopoverProps {
   anchorEl: HTMLElement | null;
   handleClose: () => void;
   productName: string;
+  productDetails:ProductDetailsResponse
 }
 
 const ProductPopover: React.FC<ProductPopoverProps> = ({
   anchorEl,
   handleClose,
   productName,
+  productDetails,
 }) => {
   const navigate = useNavigate();
   const open = Boolean(anchorEl);
@@ -61,7 +65,7 @@ const ProductPopover: React.FC<ProductPopoverProps> = ({
           },
         }}
         sx={{ width: "100%" }}
-        onClick={() => navigate(`/products/${productName}`)}
+        onClick={() => navigate(`/products/${productDetails.barcode}`)}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
@@ -70,11 +74,11 @@ const ProductPopover: React.FC<ProductPopoverProps> = ({
           <Box width={"100%"} className="flex flex-col justify-between px-4">
             <Box className="w-full flex justify-between">
               <Typography variant="body1" fontWeight={"bold"}>
-                {productName}
+              {productDetails.name}
               </Typography>
             </Box>
             <Box className="w-full flex justify-between items-center">
-              <Typography>130,000,000 تومان</Typography>
+              <Typography>{productDetails.price} تومان</Typography>
             </Box>
           </Box>
           <Box className="w-full flex flex-col items-end">

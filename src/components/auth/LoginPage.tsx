@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState  } from "react";
 import { useFormik, FormikProvider, Form } from "formik";
 import { Box, Button } from "@mui/material";
 import * as Yup from "yup";
-import { useNavigate } from "react-router";
+import { useNavigate  , useParams} from "react-router";
 import { Sms } from "iconsax-react";
 import OnBoardCard from "./OnBoardCard";
 import { useSwipeable } from "react-swipeable";
@@ -43,6 +43,7 @@ const onBordData = [
 
 const Login = () => {
   const navigate = useNavigate();
+  const { storeId } = useParams<{ storeId?: string }>();
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const {
     mutate: loginUser,
@@ -86,6 +87,15 @@ const Login = () => {
         (currentCardIndex - 1 + onBordData.length) % onBordData.length
       ),
   });
+
+  useEffect(() => {
+    if (storeId) {
+      localStorage.setItem("storeId", storeId);
+    }
+    else{
+      localStorage.removeItem("storeId")
+    }
+  }, [storeId]);
 
   useEffect(() => {
     if (isSuccess) {

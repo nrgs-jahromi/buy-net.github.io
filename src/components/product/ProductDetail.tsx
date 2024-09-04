@@ -7,12 +7,14 @@ import img1 from "../../assets/DefaultImage.png";
 import { useProductDetails } from "../../api/product/getProductDetail";
 import { useParams } from "react-router-dom";
 import { API_BASE_URL } from "../../api/config";
+import { useAddToCart } from "../../api/cart/addToCart";
 
 const ProductDetail = () => {
   const { productId } = useParams<{ productId: string }>();
   const store_id = localStorage.getItem("storeId");
 
   const { data: productDetails } = useProductDetails(store_id!, productId!);
+  const { mutate: addToCart } = useAddToCart();
 
   const images =
     productDetails && productDetails.images && productDetails.images.length > 0
@@ -39,15 +41,22 @@ const ProductDetail = () => {
     slidesToScroll: 1,
   };
 
-  // محاسبه درصد تخفیف
   const discountPercentage = productDetails?.discount?.discount_percentage || 0;
 
-  // محاسبه قیمت تخفیف خورده
   const discountedPrice =
     productDetails?.price && discountPercentage > 0
       ? Number(productDetails.price) -
         (Number(productDetails.price) * discountPercentage) / 100
       : productDetails?.price;
+
+  const handleAddToCart = () => {
+    if (productId && store_id && productDetails) {
+      addToCart({
+        params: { storeId: store_id },
+        body: [{ barcode: productId, quantity: 1 }],
+      });
+    }
+  };
 
   return (
     <Box sx={{ padding: 4 }}>
@@ -101,7 +110,7 @@ const ProductDetail = () => {
                 color="textSecondary"
                 sx={{ textDecoration: "line-through" }}
               >
-                {productDetails?.price} 
+                {productDetails?.price}
               </Typography>
             </Box>
             <Typography variant="body1" fontWeight={"bold"}>
@@ -109,7 +118,13 @@ const ProductDetail = () => {
               <span style={{ fontSize: "12px" }}>تومان</span>
             </Typography>
           </Box>
-          <Button variant="contained" color="primary" fullWidth sx={{ mt: 4 }}>
+          <Button
+            variant="contained"
+            color="primary"
+            fullWidth
+            sx={{ mt: 4 }}
+            onClick={handleAddToCart} // افزودن این تابع به دکمه
+          >
             افزودن به سبد خرید
           </Button>
         </Box>

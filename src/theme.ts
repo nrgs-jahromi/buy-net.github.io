@@ -1,23 +1,27 @@
-import { createTheme } from "@mui/material/styles";
+import { createTheme, lighten } from "@mui/material/styles";
 
-// const getMetaThemeColor = () => {
-//   const metaThemeColor = document.querySelector("meta[name='theme-color']");
-//   console.log(metaThemeColor?.getAttribute("content") );
+const getMetaThemeColor = () => {
+  // const metaThemeColor = document.querySelector("meta[name='theme-color']");
+  const metaThemeColor = localStorage.getItem("storeColor");
+  // console.log(metaThemeColor?.getAttribute("content") );
+  console.log(localStorage.getItem("storeGeneralInfo") );
   
-//   return metaThemeColor ? metaThemeColor.getAttribute("content") : "#455A64";
-// };
+  return metaThemeColor ?? "#455A64";
+};
 
-// const primaryColor = getMetaThemeColor();
+const primaryColor = getMetaThemeColor();
+const primaryLightColor = lighten(primaryColor, 0.5);
+
 
 
 const theme = createTheme({
   direction: "rtl",
   palette: {
     primary: {
-      main:"#ef4056",
+      main:primaryColor,
       // main: "#675AE7",
       // #675AE7
-      light: "#FFE4E8",
+      light: primaryLightColor,
     },
     secondary:{
       main:"#8489D4"
@@ -99,7 +103,7 @@ const theme = createTheme({
             border: `0.5px solid #E5E5E5`,
           },
           "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-            border: `1px solid #FFE4E8`, // رنگ دلخواه برای فوکوس
+            border: `1px solid ${primaryLightColor}`, // رنگ دلخواه برای فوکوس
           },
         },
         input: {

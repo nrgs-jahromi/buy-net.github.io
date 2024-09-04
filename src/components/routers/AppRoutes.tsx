@@ -15,9 +15,10 @@ const AppRoutes: FC = () => {
   return (
     <BrowserRouter>
       <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/verify/:phoneNumber" element={<Verification />} />
-      <Route path="/*" element={<MainTemplate />}>
+        <Route path="/login" element={<Login />} />
+        <Route path="/verify/:phoneNumber" element={<Verification />} />
+        <Route path="/:storeId?" element={<Login />} /> 
+        <Route path="/*" element={<MainTemplate />}>
           <Route path="profile" element={<UserProfilePage />} />
           <Route path="history" element={<History />} />
           <Route path="search" element={<SearchPage />} />
@@ -25,11 +26,7 @@ const AppRoutes: FC = () => {
           <Route path="explore" element={<ExplorePage />} />
           <Route path="cart" element={<CartPage />} />
           <Route path="products/:productId" element={<ProductDetail />} />
-
-          
- 
         </Route>
-       
       </Routes>
     </BrowserRouter>
   );

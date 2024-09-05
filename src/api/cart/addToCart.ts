@@ -19,7 +19,7 @@ const addToCart = async (
   product: AddToCartDataT
 ): Promise<AddToCartResponse> => {
   const { data } = await fetcher.post<AddToCartResponse>(
-    `/invoices/store/${product.params.storeId}/add-to-cart/`,
+    `/invoices/add-to-cart/${product.params.storeId}/`,
     { products: product.body }
   );
   return data;

@@ -1,21 +1,26 @@
 import { Box, Button, Typography } from "@mui/material";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import CartProductCard from "./CartProductCard";
 import theme from "../../theme";
 import PaymentDrawer from "./PaymentDrawer";
 import { useCart } from "../../api/cart/getCart";
+import { useCheckout } from "../../api/cart/checkout"; // اضافه کردن هوک چک اوت
 import { API_BASE_URL } from "../../api/config";
-import { date } from "yup";
 
 const CartPage = () => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
-  const storeId = localStorage.getItem("storeId");
-  const { data: cartData, isLoading, error, refetch } = useCart(storeId!);
+  const storeId = localStorage.getItem("storeId")!;
+  const { data: cartData, isLoading, error, refetch } = useCart(storeId);
+
+  const { mutate: checkout, isLoading: isCheckoutLoading } = useCheckout();
+
   const updateProductCount = (index: number, newCount: number) => {
     if (!cartData) return;
     const updatedItems = [...cartData.items];
     updatedItems[index].quantity = newCount;
+    // تغییرات لازم برای مقدار جدید در سبد خرید
   };
+
   const calculateTotalPrice = () => {
     if (!cartData) return 0;
     return cartData.items.reduce(
@@ -43,7 +48,18 @@ const CartPage = () => {
   const totalItems = calculateTotalItems();
 
   const handleConfirmAndProceed = () => {
-    setDrawerOpen(true);
+    checkout(
+      { params: { storeId } },
+      {
+        onSuccess: () => {
+          setDrawerOpen(true);
+        },
+        onError: (error) => {
+          console.error("Checkout error:", error);
+          // مدیریت خطاها، مانند نمایش پیام خطا
+        },
+      }
+    );
   };
 
   const toggleDrawer = (open: boolean) => () => {
@@ -66,6 +82,7 @@ const CartPage = () => {
 
     return <Typography>خطا در دریافت اطلاعات سبد خرید.</Typography>;
   }
+
   return (
     <Box
       height={"100%"}
@@ -100,6 +117,7 @@ const CartPage = () => {
           variant="contained"
           color="primary"
           onClick={handleConfirmAndProceed}
+          disabled={isCheckoutLoading}
         >
           تایید و ادامه
         </Button>

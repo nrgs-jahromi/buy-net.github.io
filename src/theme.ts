@@ -1,30 +1,31 @@
 import { createTheme, lighten } from "@mui/material/styles";
 
+// تابع برای تبدیل رنگ به قالب پشتیبانی‌شده
+const normalizeColor = (color: string): string => {
+  const validColor = /^#([0-9A-Fa-f]{3}){1,2}$/i.test(color) ? color : "#EF4056";
+  return validColor;
+};
+
+
 const getMetaThemeColor = () => {
-  // const metaThemeColor = document.querySelector("meta[name='theme-color']");
   const metaThemeColor = localStorage.getItem("storeColor");
-  // console.log(metaThemeColor?.getAttribute("content") );
-  console.log(localStorage.getItem("storeGeneralInfo") );
-  
-  return metaThemeColor ?? "#455A64";
+  return normalizeColor(metaThemeColor ?? "#EF4056");
 };
 
 const primaryColor = getMetaThemeColor();
+console.log("Primary color:", primaryColor);
+
 const primaryLightColor = lighten(primaryColor, 0.5);
-
-
 
 const theme = createTheme({
   direction: "rtl",
   palette: {
     primary: {
-      main:primaryColor,
-      // main: "#675AE7",
-      // #675AE7
+      main: primaryColor,
       light: primaryLightColor,
     },
-    secondary:{
-      main:"#8489D4"
+    secondary: {
+      main: "#8489D4",
     },
     text: {
       primary: "#455A64",
@@ -44,7 +45,6 @@ const theme = createTheme({
       800: "#262626",
       900: "#171717",
     },
-   
   },
   typography: {
     fontFamily: "dana",
@@ -54,8 +54,6 @@ const theme = createTheme({
     button: {
       textTransform: "none",
     },
-   
-
     subtitle1: {
       "@media (max-width:768px)": {
         fontSize: "14px",
@@ -75,12 +73,10 @@ const theme = createTheme({
           borderRadius: "8px",
         },
         startIcon: {
-          // The marginRight and marginLeft properties are adjusted to ensure proper spacing in RTL layouts.
           marginRight: "auto",
           marginLeft: "8px",
         },
         endIcon: {
-          // The marginRight and marginLeft properties are adjusted to ensure proper spacing in RTL layouts.
           marginLeft: "auto",
           marginRight: "8px",
         },
@@ -88,27 +84,20 @@ const theme = createTheme({
     },
     MuiTypography: {
       defaultProps: {
-        variantMapping: {
-          // customBold: "custombold",
-          // custom: "body1",
-        },
+        variantMapping: {},
       },
     },
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
           borderRadius: "8px",
-          // padding:"0 14px",
           "& .MuiOutlinedInput-notchedOutline": {
             border: `0.5px solid #E5E5E5`,
           },
-          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-            border: `1px solid ${primaryLightColor}`, // رنگ دلخواه برای فوکوس
-          },
+          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {},
         },
         input: {
           margin: "0 14px",
-          // padding:"16.5 0!"
         },
       },
     },
@@ -121,12 +110,7 @@ const theme = createTheme({
       },
     },
     MuiInputBase: {
-      styleOverrides: {
-        // input:{
-        //   margin:"0 14px",
-        //   padding:"16.5 0"
-        // }
-      },
+      styleOverrides: {},
     },
     MuiPaper: {
       styleOverrides: {
@@ -141,15 +125,13 @@ const theme = createTheme({
     },
     MuiStepper: {
       styleOverrides: {
-        horizontal: {
-          // direction: "rtl",
-        },
+        horizontal: {},
       },
     },
     MuiDialog: {
       styleOverrides: {
         paper: {
-          padding: "24px  32px",
+          padding: "24px 32px",
         },
       },
     },
@@ -164,7 +146,6 @@ const theme = createTheme({
       defaultProps: {
         square: true,
         disableGutters: true,
-
         sx: {
           "& .Mui-expanded": {
             bgcolor: "#E1DEFA",
@@ -186,11 +167,6 @@ const theme = createTheme({
       },
     },
   },
-  /**
-   * Overriding breakpoints to match the values with tailwind values
-   * MUI: https://mui.com/material-ui/customization/breakpoints/
-   * Tailwind: https://tailwindcss.com/docs/screens
-   */
   breakpoints: {
     values: {
       xs: 0,

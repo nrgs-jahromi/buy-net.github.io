@@ -1,76 +1,67 @@
 import { Box, Button, Typography } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CartProductCard from "./CartProductCard";
-import img from "../../assets/E-Wallet-pana (2).svg";
 import theme from "../../theme";
 import PaymentDrawer from "./PaymentDrawer";
-
-const initialProducts = [
-  {
-    image: img,
-    name: "کالا ۱",
-    count: 1,
-    amount: 120,
-  },
-  {
-    image: img,
-    name: "کالا ۲",
-    count: 2,
-    amount: 12000,
-  },
-  {
-    image: img,
-    name: "کالا ۳",
-    count: 1,
-    amount: 10200,
-  },
- 
-];
+import { useCart } from "../../api/cart/getCart";
+import { API_BASE_URL } from "../../api/config";
 
 const CartPage = () => {
-  const [products, setProducts] = useState(initialProducts);
   const [isDrawerOpen, setDrawerOpen] = useState(false);
+const storeId = localStorage.getItem("storeId")
+  // استفاده از هوک useCart برای گرفتن اطلاعات سبد خرید
+  const { data: cartData, isLoading, error } = useCart(storeId!);
 
-  const updateProductCount = (index:number, newCount:number) => {
-    const updatedProducts = [...products];
-    updatedProducts[index].count = newCount;
-    setProducts(updatedProducts);
+  const updateProductCount = (index: number, newCount: number) => {
+    if (!cartData) return;
+    const updatedItems = [...cartData.items];
+    updatedItems[index].quantity = newCount;
+    // تغییرات لازم برای مقدار جدید در سبد خرید
   };
 
-  const calculateTotalAmount = () => {
-    return products.reduce(
-      (total, product) => total + product.count * product.amount,
-      0
-    );
-  };
+  // const calculateTotalAmount = () => {
+  //   return cartData?.items.reduce(
+  //     (total, item) => total + item.quantity * item.total_price_with_discount,
+  //     0
+  //   ) || 0;
+  // };
 
-  const calculateTotalItems = () => {
-    return products.reduce((total, product) => total + product.count, 0);
-  };
+  // const calculateTotalItems = () => {
+  //   return cartData?.items.reduce((total, item) => total + item.quantity, 0) || 0;
+  // };
 
-  const totalAmount = calculateTotalAmount();
-  const totalItems = calculateTotalItems();
+  // const totalAmount = calculateTotalAmount();
+  // const totalItems = calculateTotalItems();
 
   const handleConfirmAndProceed = () => {
-    setDrawerOpen(true); 
+    setDrawerOpen(true);
   };
 
   const toggleDrawer = (open: boolean) => () => {
-    setDrawerOpen(open); 
+    setDrawerOpen(open);
   };
+
+  if (isLoading) {
+    return <Typography>در حال بارگذاری...</Typography>;
+  }
+
+  if (error) {
+    return <Typography>خطا در دریافت اطلاعات سبد خرید.</Typography>;
+  }
+
   return (
     <Box
       height={"100%"}
       paddingBottom={10}
       className="space-y-3 overflow-y-auto overflow-x-hidden mb-8 mt-5"
     >
-      {products.map((product, index) => (
+      {cartData?.items.map((item, index) => (
         <Box className="px-5" key={index}>
           <CartProductCard
-            productImage={product.image}
-            productName={product.name}
-            count={product.count}
-            amount={product.amount}
+            productImage={API_BASE_URL+item.product.primary_image}
+            productName={item.product.name}
+            count={item.quantity}
+            amount={item.total_price_with_discount}
             onCountChange={(newCount) => updateProductCount(index, newCount)}
           />
         </Box>
@@ -96,18 +87,25 @@ const CartPage = () => {
         </Button>
         <Box textAlign={"left"}>
           <Typography variant="body1" fontSize={18} fontWeight={"bold"}>
-            {totalAmount.toLocaleString()}
+           
             <span style={{ fontSize: 14, fontWeight: "normal" }}> تومان </span>
           </Typography>
           <Typography variant="body1" fontWeight={"bold"}>
-            {totalItems}
+          
             <span style={{ fontSize: 14, fontWeight: "normal" }}> کالا</span>
           </Typography>
         </Box>
       </Box>
-      {isDrawerOpen &&
-      <PaymentDrawer open={isDrawerOpen} toggleDrawer={toggleDrawer} discount={10} totalAmount={totalAmount} totalItems={totalItems} />
-      }
+
+      {isDrawerOpen && (
+        <PaymentDrawer
+          open={isDrawerOpen}
+          toggleDrawer={toggleDrawer}
+          discount={10}
+          totalAmount={10}
+          totalItems={10}
+        />
+      )}
     </Box>
   );
 };

@@ -5,33 +5,39 @@ import theme from "../../theme";
 import PaymentDrawer from "./PaymentDrawer";
 import { useCart } from "../../api/cart/getCart";
 import { API_BASE_URL } from "../../api/config";
+import { date } from "yup";
 
 const CartPage = () => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
-const storeId = localStorage.getItem("storeId")
-  // استفاده از هوک useCart برای گرفتن اطلاعات سبد خرید
+  const storeId = localStorage.getItem("storeId");
   const { data: cartData, isLoading, error } = useCart(storeId!);
-
   const updateProductCount = (index: number, newCount: number) => {
     if (!cartData) return;
     const updatedItems = [...cartData.items];
     updatedItems[index].quantity = newCount;
-    // تغییرات لازم برای مقدار جدید در سبد خرید
+  };
+  const calculateTotalPrice = () => {
+    if (!cartData) return 0;
+    return cartData.items.reduce((total, item) => total + item.quantity * Number(item.product.price), 0);
   };
 
-  // const calculateTotalAmount = () => {
-  //   return cartData?.items.reduce(
-  //     (total, item) => total + item.quantity * item.total_price_with_discount,
-  //     0
-  //   ) || 0;
-  // };
+  const calculateTotalAmount = () => {
+    return (
+      cartData?.items.reduce(
+        (total, item) => total + item.quantity * item.total_price_with_discount,
+        0
+      ) || 0
+    );
+  };
 
-  // const calculateTotalItems = () => {
-  //   return cartData?.items.reduce((total, item) => total + item.quantity, 0) || 0;
-  // };
+  const calculateTotalItems = () => {
+    return (
+      cartData?.items.reduce((total, item) => total + item.quantity, 0) || 0
+    );
+  };
 
-  // const totalAmount = calculateTotalAmount();
-  // const totalItems = calculateTotalItems();
+  const totalAmount = calculateTotalAmount();
+  const totalItems = calculateTotalItems();
 
   const handleConfirmAndProceed = () => {
     setDrawerOpen(true);
@@ -46,9 +52,17 @@ const storeId = localStorage.getItem("storeId")
   }
 
   if (error) {
+    const errorDetail = error.response?.data?.detail;
+
+    if (
+      typeof errorDetail === "string" &&
+      errorDetail === "No Cart matches the given query."
+    ) {
+      return <Typography>هیچ محصولی در سبد خرید شما وجود ندارد</Typography>;
+    }
+
     return <Typography>خطا در دریافت اطلاعات سبد خرید.</Typography>;
   }
-
   return (
     <Box
       height={"100%"}
@@ -58,10 +72,7 @@ const storeId = localStorage.getItem("storeId")
       {cartData?.items.map((item, index) => (
         <Box className="px-5" key={index}>
           <CartProductCard
-            productImage={API_BASE_URL+item.product.primary_image}
-            productName={item.product.name}
-            count={item.quantity}
-            amount={item.total_price_with_discount}
+            item={item}
             onCountChange={(newCount) => updateProductCount(index, newCount)}
           />
         </Box>
@@ -82,16 +93,20 @@ const storeId = localStorage.getItem("storeId")
         justifyContent="space-between"
         alignItems="center"
       >
-        <Button variant="contained" color="primary" onClick={handleConfirmAndProceed}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleConfirmAndProceed}
+        >
           تایید و ادامه
         </Button>
         <Box textAlign={"left"}>
           <Typography variant="body1" fontSize={18} fontWeight={"bold"}>
-           
+            {cartData.total_price}
             <span style={{ fontSize: 14, fontWeight: "normal" }}> تومان </span>
           </Typography>
           <Typography variant="body1" fontWeight={"bold"}>
-          
+            {cartData.total_quantity}
             <span style={{ fontSize: 14, fontWeight: "normal" }}> کالا</span>
           </Typography>
         </Box>
@@ -101,9 +116,9 @@ const storeId = localStorage.getItem("storeId")
         <PaymentDrawer
           open={isDrawerOpen}
           toggleDrawer={toggleDrawer}
-          discount={10}
-          totalAmount={10}
-          totalItems={10}
+          discount={calculateTotalPrice() - cartData.total_price}
+          totalAmount={calculateTotalPrice()}
+          totalItems={cartData.total_quantity}
         />
       )}
     </Box>

@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetcher } from "../config";
 
-export type AddToCartDataT = {
+export type RemoveFromCartDataT = {
   params: {
     storeId: string;
   };
@@ -15,20 +15,20 @@ interface AddToCartResponse {
   detail: string;
 }
 
-const addToCart = async (
-  product: AddToCartDataT
+const removeFromCart = async (
+  product: RemoveFromCartDataT
 ): Promise<AddToCartResponse> => {
   const { data } = await fetcher.post<AddToCartResponse>(
-    `/invoices/add-to-cart/${product.params.storeId}/`,
+    `/invoices/remove-from-cart/${product.params.storeId}/`,
     { products: product.body }
   );
   return data;
 };
 
-export const useAddToCart = () => {
+export const useRemoveFromCart = () => {
   const queryClient = useQueryClient();
 
-  return useMutation(addToCart, {
+  return useMutation(removeFromCart, {
     onSuccess: () => {
       queryClient.invalidateQueries(["cart"]);
     },

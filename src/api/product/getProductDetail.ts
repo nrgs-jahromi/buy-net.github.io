@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetcher } from "../config";
-type Discount = {
+ export type Discount = {
   discount_percentage: number | null;
   expiration_date: string | null;
   min_quantity_for_discount: number | null;

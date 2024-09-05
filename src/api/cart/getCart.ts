@@ -4,10 +4,21 @@ import {
   UseQueryOptions,
   useQuery,
 } from "@tanstack/react-query";
-import { ProductDetailsResponse } from "../product/getProductDetail";
+import { Discount, ProductDetailsResponse } from "../product/getProductDetail";
 
-type CartItemT = {
-  product: ProductDetailsResponse;
+type ProductData = {
+  barcode: string;
+  name: string;
+  price: string;
+  stock: number | null;
+  brand: null | string;
+  primary_image_url: string | null;
+  category_names: string[];
+  discount: Discount;
+};
+
+export type CartItemT = {
+  product: ProductData;
   quantity: number;
   total_price: number;
   total_price_with_discount: number;

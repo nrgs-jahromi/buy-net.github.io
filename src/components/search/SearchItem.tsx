@@ -6,6 +6,7 @@ import { ProductData } from "../../api/product/getProductsList";
 import { FC } from "react";
 import { API_BASE_URL } from "../../api/config";
 import img1 from "../../assets/DefaultImage.png";
+import { useAddToCart } from "../../api/cart/addToCart";
 
 type SearchItemProps = {
   item: ProductData;
@@ -13,6 +14,23 @@ type SearchItemProps = {
 
 const SearchItem: FC<SearchItemProps> = ({ item }) => {
   const navigate = useNavigate();
+  const addToCartMutation = useAddToCart();
+  const storeId = localStorage.getItem("storeId");
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.stopPropagation();
+
+    addToCartMutation.mutate({
+      params: {
+        storeId: storeId!,
+      },
+      body: [
+        {
+          barcode: item.barcode,
+          quantity: 1,
+        },
+      ],
+    });
+  };
 
   return (
     <Box
@@ -38,7 +56,11 @@ const SearchItem: FC<SearchItemProps> = ({ item }) => {
         }}
       >
         <img
-          src={item.primary_image_url ? API_BASE_URL + item.primary_image_url : img1}
+          src={
+            item.primary_image_url
+              ? API_BASE_URL + item.primary_image_url
+              : img1
+          }
           alt={item.name}
           style={{
             maxWidth: "100%",
@@ -48,17 +70,23 @@ const SearchItem: FC<SearchItemProps> = ({ item }) => {
         />
       </Box>
 
-      <Box width={"100%"} height={90} className="flex  flex-col justify-between">
+      <Box
+        width={"100%"}
+        height={90}
+        className="flex  flex-col justify-between"
+      >
         <Typography variant="body2" fontWeight={"bold"}>
           {item.name}
         </Typography>
         <Box className="flex justify-between">
-          <Typography variant="body2">{item.stock?.toLocaleString()} تومان</Typography>
+          <Typography variant="body2">
+            {item.stock?.toLocaleString()} تومان
+          </Typography>
           <Button
             startIcon={<Add />}
             size="small"
             variant="contained"
-            onClick={(e) => e.stopPropagation()}
+            onClick={handleAddToCart}
           >
             افزودن
           </Button>

@@ -52,7 +52,7 @@ const ExplorePage = () => {
         <Typography>در حال بارگذاری...</Typography>
       ) : isError ? (
         <Typography>خطایی رخ داده است</Typography>
-      ) : banners?.length ? (
+      ) : banners?.length > 1 ? (
         <Slider {...settings}>
           {banners.map((banner, index) => (
             <Box
@@ -82,6 +82,31 @@ const ExplorePage = () => {
             </Box>
           ))}
         </Slider>
+      ) : banners?.length === 1 ? (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            aspectRatio: "16 / 9",
+
+            borderRadius: "16px",
+          }}
+          onClick={() => navigate(`/products/${banners[0].product_barcode}`)}
+        >
+          <img
+            src={API_BASE_URL + banners[0].image_url || img}
+            alt="بنر تبلیغاتی"
+            style={{
+              cursor: "pointer",
+              borderRadius: "16px",
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+            }}
+          />
+        </Box>
       ) : (
         <Typography>هیچ بنری یافت نشد</Typography>
       )}

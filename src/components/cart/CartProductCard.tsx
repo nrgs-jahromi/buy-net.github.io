@@ -109,7 +109,7 @@ const CartProductCard: FC<CartCardProps> = ({ item, onCountChange }) => {
           zIndex: isSwipedLeft ? 1 : -1,
         }}
         color="error"
-        onClick={handleDeleteItem} // حذف کل آیتم
+        onClick={handleDeleteItem} 
       >
         <Trash />
       </Button>
@@ -146,6 +146,7 @@ const CartProductCard: FC<CartCardProps> = ({ item, onCountChange }) => {
             onClick={handleIncrease}
             color="primary"
             className="rounded-md"
+            disabled={item.product.stock! <= count}
           >
             <Add />
           </IconButton>

@@ -10,7 +10,7 @@ import { date } from "yup";
 const CartPage = () => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const storeId = localStorage.getItem("storeId");
-  const { data: cartData, isLoading, error } = useCart(storeId!);
+  const { data: cartData, isLoading, error, refetch } = useCart(storeId!);
   const updateProductCount = (index: number, newCount: number) => {
     if (!cartData) return;
     const updatedItems = [...cartData.items];
@@ -18,7 +18,10 @@ const CartPage = () => {
   };
   const calculateTotalPrice = () => {
     if (!cartData) return 0;
-    return cartData.items.reduce((total, item) => total + item.quantity * Number(item.product.price), 0);
+    return cartData.items.reduce(
+      (total, item) => total + item.quantity * Number(item.product.price),
+      0
+    );
   };
 
   const calculateTotalAmount = () => {

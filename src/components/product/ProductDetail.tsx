@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Slider from "react-slick";
 import { Box, Typography, Button, Divider } from "@mui/material";
 import "slick-carousel/slick/slick.css";
@@ -8,13 +8,14 @@ import { useProductDetails } from "../../api/product/getProductDetail";
 import { useParams } from "react-router-dom";
 import { API_BASE_URL } from "../../api/config";
 import { useAddToCart } from "../../api/cart/addToCart";
+import { notif } from "../common/notification/Notification";
 
 const ProductDetail = () => {
   const { productId } = useParams<{ productId: string }>();
   const store_id = localStorage.getItem("storeId");
 
   const { data: productDetails } = useProductDetails(store_id!, productId!);
-  const { mutate: addToCart } = useAddToCart();
+  const { mutate: addToCart, isSuccess, isError } = useAddToCart();
 
   const images =
     productDetails && productDetails.images && productDetails.images.length > 0
@@ -58,6 +59,18 @@ const ProductDetail = () => {
     }
   };
 
+  useEffect(() => {
+    if (isSuccess) {
+      notif(`${productDetails?.name} با موفقیت به سبد خرید شما اضافه شد.`, {
+        variant: "success",
+      });
+    } else if (isError) {
+      notif("مشکلی در ثبت کالا وجود دارد لطفا بعدا تلاش کنید.", {
+        variant: "error",
+      });
+    }
+  }, [isSuccess, isError]);
+
   return (
     <Box sx={{ padding: 4 }}>
       <Slider {...settings}>
@@ -96,22 +109,27 @@ const ProductDetail = () => {
           <Box className="flex flex-col justify-start text-left">
             <Box display="flex" className="w-full justify-end gap-3">
               {discountPercentage > 0 && (
-                <Typography
-                  variant="body1"
-                  color="error"
-                  align="left"
-                  fontWeight={"bold"}
-                >
-                  {discountPercentage}%
-                </Typography>
+                <>
+                  <Typography
+                    variant="body1"
+                    color="error"
+                    align="left"
+                    fontWeight={"bold"}
+                  >
+                    {discountPercentage}%
+                  </Typography>
+
+                  <Typography
+                    variant="body1"
+                    color="textSecondary"
+                    sx={{
+                      textDecoration: "line-through",
+                    }}
+                  >
+                    {productDetails?.price}
+                  </Typography>
+                </>
               )}
-              <Typography
-                variant="body1"
-                color="textSecondary"
-                sx={{ textDecoration: "line-through" }}
-              >
-                {productDetails?.price}
-              </Typography>
             </Box>
             <Typography variant="body1" fontWeight={"bold"}>
               {discountedPrice?.toLocaleString()}{" "}
@@ -123,9 +141,10 @@ const ProductDetail = () => {
             color="primary"
             fullWidth
             sx={{ mt: 4 }}
+            disabled={productDetails?.stock === 0}
             onClick={handleAddToCart} // افزودن این تابع به دکمه
           >
-            افزودن به سبد خرید
+            {productDetails?.stock === 0 ? "عدم موجودی" : "افزودن به سبد خرید"}
           </Button>
         </Box>
       </Box>

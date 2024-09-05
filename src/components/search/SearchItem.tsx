@@ -3,10 +3,11 @@ import { Add } from "iconsax-react";
 import { useNavigate } from "react-router-dom";
 import theme from "../../theme";
 import { ProductData } from "../../api/product/getProductsList";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { API_BASE_URL } from "../../api/config";
 import img1 from "../../assets/DefaultImage.png";
 import { useAddToCart } from "../../api/cart/addToCart";
+import { notif } from "../common/notification/Notification";
 
 type SearchItemProps = {
   item: ProductData;
@@ -14,12 +15,12 @@ type SearchItemProps = {
 
 const SearchItem: FC<SearchItemProps> = ({ item }) => {
   const navigate = useNavigate();
-  const addToCartMutation = useAddToCart();
+  const { mutate: addToCartMutation, isError, isSuccess } = useAddToCart();
   const storeId = localStorage.getItem("storeId");
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
 
-    addToCartMutation.mutate({
+    addToCartMutation({
       params: {
         storeId: storeId!,
       },
@@ -31,6 +32,18 @@ const SearchItem: FC<SearchItemProps> = ({ item }) => {
       ],
     });
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      notif(`${item?.name} با موفقیت به سبد خرید شما اضافه شد.`, {
+        variant: "success",
+      });
+    } else if (isError) {
+      notif("مشکلی در ثبت کالا وجود دارد لطفا بعدا تلاش کنید.", {
+        variant: "error",
+      });
+    }
+  }, [isSuccess, isError]);
 
   return (
     <Box
@@ -87,6 +100,7 @@ const SearchItem: FC<SearchItemProps> = ({ item }) => {
             size="small"
             variant="contained"
             onClick={handleAddToCart}
+            disabled={item.stock === 0}
           >
             افزودن
           </Button>

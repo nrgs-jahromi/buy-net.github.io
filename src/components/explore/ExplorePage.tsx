@@ -1,23 +1,37 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Paper, Typography } from "@mui/material";
 import logo from "../../assets/temp logo/logo.png";
 import theme from "../../theme";
 import { ArrowLeft2 } from "iconsax-react";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { useSwipeable } from "react-swipeable";
-import BorderCard from "./BorderCard";
-import img from "../../assets/DefaultImage.png";
+import { useState } from "react";
 import Slider from "react-slick";
-// دیتای نمونه برای کارت‌ها
-const onBordData = [
-  { id: "1", img: img },
-  { id: "2", img: img },
-  { id: "3", img: img },
-];
+import img from "../../assets/DefaultImage.png";
+import { useBanners } from "../../api/explore/getBanners";
+import { API_BASE_URL } from "../../api/config";
+import { useTopDiscountedProducts } from "../../api/explore/getSpecials";
+import { useRecommendedProducts } from "../../api/explore/getRecommendedList";
+import ProductCard from "./ProductCard";
 
 const ExplorePage = () => {
   const navigate = useNavigate();
-  const [currentCardIndex, setCurrentCardIndex] = useState(0);
+  const store_id = localStorage.getItem("storeId");
+
+  const { data: banners, isLoading, isError } = useBanners(store_id!);
+  const {
+    data: discountedProducts,
+    isLoading: discountedProductsLoading,
+    isError: discountedProductsError,
+  } = useTopDiscountedProducts(store_id!);
+  const {
+    data: recommendedProducts,
+    isLoading: recommendedProductsLoading,
+    isError: recommendedProductsError,
+  } = useRecommendedProducts(store_id!);
+
+  const combinedProducts = [
+    ...(discountedProducts?.top_discounted_products || []),
+    ...(discountedProducts?.expiring_soon_products || []),
+  ];
   const settings = {
     dots: false,
     dotsClass: "slick-dots slick-thumb",
@@ -25,41 +39,17 @@ const ExplorePage = () => {
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
-  };
-  const handleCardChange = (index: number) => {
-    setCurrentCardIndex(index);
-  };
-
-  const swipeHandlers = useSwipeable({
-    onSwipedLeft: () => {
-      handleCardChange((currentCardIndex + 1) % onBordData.length);
-    },
-    onSwipedRight: () => {
-      handleCardChange(
-        (currentCardIndex - 1 + onBordData.length) % onBordData.length
-      );
-    },
-  });
-
-  const handleNextCard = () => {
-    handleCardChange((currentCardIndex + 1) % onBordData.length);
+    autoplay: true,
+    autoplaySpeed: 3000,
   };
 
-  const handlePrevCard = () => {
-    handleCardChange((currentCardIndex - 1 + onBordData.length) % onBordData.length);
-  };
-  useEffect(() => {
-    const timer = setInterval(handleNextCard, 5000); // تغییر هر ۵ ثانیه
-
-    return () => clearInterval(timer); // پاک‌سازی تایمر
-  }, [currentCardIndex]);
   return (
     <Box className="p-8 space-y-3">
       <Box className="flex justify-start gap-4 items-center">
         <img
-          src={logo}
-          height={60}
-          width={60}
+          src={API_BASE_URL + localStorage.getItem("storeIcon") || logo}
+          height={70}
+          width={70}
           style={{ borderRadius: "50%" }}
         />
         <Typography
@@ -67,43 +57,74 @@ const ExplorePage = () => {
           fontWeight={"bold"}
           color={theme.palette.primary.main}
         >
-          افق کوروش
+          {localStorage.getItem("storeName")}
         </Typography>
       </Box>
-      <Slider {...settings}>
-          {onBordData.map((image, index) => (
+
+      {/* بررسی وضعیت بارگیری بنرها */}
+      {isLoading ? (
+        <Typography>در حال بارگذاری...</Typography>
+      ) : isError ? (
+        <Typography>خطایی رخ داده است</Typography>
+      ) : banners?.length > 1 ? (
+        <Slider {...settings}>
+          {banners.map((banner, index) => (
             <Box
               key={index}
               sx={{
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                height: "150px",
-                padding: "0 20px",
-                bgcolor:theme.palette.grey[400],
+                width: "100%",
+                aspectRatio: "16 / 9",
                 borderRadius: "16px",
-
               }}
-              onClick={() => navigate(`products/${image.id}`)}
+              onClick={() => navigate(`/products/${banner.product_barcode}`)}
             >
-                {image.id}
-                
-              {/* <img
-                src={image.img}
-                onClick={() => navigate(image.id)}
+              <img
+                src={API_BASE_URL + banner.image_url || img}
+                alt="بنر تبلیغاتی"
                 style={{
                   cursor: "pointer",
                   borderRadius: "16px",
-                  maxWidth: "100%",
-                  maxHeight: "100%",
+                  width: "100%",
+                  height: "100%",
                   objectFit: "cover",
                 }}
-              /> */}
+              />
             </Box>
           ))}
         </Slider>
+      ) : banners?.length === 1 ? (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            aspectRatio: "16 / 9",
+            borderRadius: "16px",
+          }}
+          onClick={() => navigate(`/products/${banners[0].product_barcode}`)}
+        >
+          <img
+            src={API_BASE_URL + banners[0].image_url || img}
+            alt="بنر تبلیغاتی"
+            style={{
+              cursor: "pointer",
+              borderRadius: "16px",
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+            }}
+          />
+        </Box>
+      ) : (
+        <Typography>هیچ بنری یافت نشد</Typography>
+      )}
+
       <Box className="flex w-full items-center justify-between">
-        <Typography fontWeight={"bold"}>تخفیفات ویژه </Typography>
+        <Typography fontWeight={"bold"}>تخفیفات ویژه</Typography>
         <Button
           size="small"
           sx={{ color: theme.palette.grey[400] }}
@@ -113,6 +134,79 @@ const ExplorePage = () => {
           مشاهده همه
         </Button>
       </Box>
+
+      {discountedProductsLoading ? (
+        <Typography>در حال بارگذاری محصولات...</Typography>
+      ) : discountedProductsError ? (
+        <Typography>خطایی در بارگذاری محصولات رخ داده است</Typography>
+      ) : combinedProducts.length > 0 ? (
+        <Box className="w-full flex gap-3 overflow-auto">
+          {combinedProducts.map((product, index) => (
+            <ProductCard product={product}/>
+          //   <Box
+          //   key={index}
+          //   component={Paper}
+          //   className="flex flex-col items-center p-2 gap-2"
+          //   sx={{ minWidth: "30vw", width: "30vw", position: "relative"  , aspectRatio: "3 / 4"}} // اضافه کردن position relative برای کارت محصول
+          // >
+          //   {/* نمایش مثلث و درصد تخفیف */}
+          //   {product.discount?.discount_percentage > 0 && (
+          //     <Box
+          //       sx={{
+          //         position: "absolute",
+          //         top: 0,
+          //         left: 0,
+          //         width: 0,
+          //         height: 0,
+          //         borderLeft: "50px solid red", // رنگ قرمز مثلث
+          //         borderBottom: "50px solid transparent",
+          //         zIndex: 0,
+          //       }}
+          //     >
+          //       <Typography
+          //         sx={{
+          //           position: "absolute",
+          //           top: "5px",
+          //           left: "1px",
+          //           ml:-5,
+          //           color: "white",
+          //           fontSize: "12px",
+          //           fontWeight: "bold",
+          //         }}
+                  
+          //       >
+          //         {product.discount.discount_percentage}%
+          //       </Typography>
+          //     </Box>
+          //   )}
+          
+          //   <img
+          //     src={product.primary_image_url ?API_BASE_URL + product.primary_image_url :img}
+          //     width="100%"
+          //     style={{ aspectRatio: "4 / 3", borderRadius: "8px" }}
+          //   />
+          
+
+          //   <Typography variant="body2" fontWeight={"bold"} width={"100%"} align="right">
+          //     {product.name}
+          //   </Typography>
+          
+          //   {product.discount?.discount_percentage > 0 && (
+          //     <Typography variant="body2" color={theme.palette.error.main}>
+          //       تخفیف: {product.discount.discount_percentage}%
+          //     </Typography>
+          //   )}
+          //   {product.discount?.expiration_date && (
+          //     <Typography variant="body2" color={theme.palette.warning.main}>
+          //       انقضا: {product.discount.expiration_date}
+          //     </Typography>
+          //   )}
+          // </Box>
+          ))}
+        </Box>
+      ) : (
+        <Typography>هیچ محصولی یافت نشد</Typography>
+      )}
       <Box className="flex w-full items-center justify-between ">
         <Typography fontWeight={"bold"}>برای شما</Typography>
         <Button
@@ -123,6 +217,27 @@ const ExplorePage = () => {
         >
           مشاهده همه
         </Button>
+      </Box>
+
+      {/* نمایش لیست محصولات پیشنهادی */}
+      <Box className="w-full flex gap-3 overflow-auto">
+        {recommendedProducts?.map((product, index) => (
+          <Box
+            key={index}
+            component={Paper}
+            className="flex flex-col items-center"
+            sx={{ width: 200 }}
+          >
+            <img
+              src={API_BASE_URL + product.primary_image_url || img}
+              width="100%"
+              style={{ aspectRatio: "16 / 9", borderRadius: "8px" }}
+            />
+            <Typography variant="body2" fontWeight={"bold"}>
+              {product.name}
+            </Typography>
+          </Box>
+        ))}
       </Box>
     </Box>
   );

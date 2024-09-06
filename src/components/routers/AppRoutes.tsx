@@ -10,6 +10,7 @@ import ProductDetail from "../product/ProductDetail";
 import CartPage from "../cart/CartPage";
 import SearchPage from "../search/SearchPage";
 import ExplorePage from "../explore/ExplorePage";
+import PaymentConfirmation from "../cart/PaymentConfirmation";
 
 const AppRoutes: FC = () => {
   return (
@@ -20,6 +21,7 @@ const AppRoutes: FC = () => {
         <Route path="/:storeId?" element={<Login />} /> 
         <Route path="/*" element={<MainTemplate />}>
           <Route path="profile" element={<UserProfilePage />} />
+          <Route path="payment-confirm/:invoiceId" element={<PaymentConfirmation />} />
           <Route path="history" element={<History />} />
           <Route path="search" element={<SearchPage />} />
           <Route path="scanner" element={<ScanPage />} />

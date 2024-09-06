@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Paper, Typography } from "@mui/material";
 import logo from "../../assets/temp logo/logo.png";
 import theme from "../../theme";
 import { ArrowLeft2 } from "iconsax-react";
@@ -9,6 +9,7 @@ import Slider from "react-slick";
 import img from "../../assets/DefaultImage.png"; // تصویر پیش‌فرض
 import { useBanners } from "../../api/explore/getBanners";
 import { API_BASE_URL } from "../../api/config";
+import { useRecommendedProducts } from "../../api/explore/getSpecail";
 
 const ExplorePage = () => {
   const navigate = useNavigate();
@@ -17,6 +18,11 @@ const ExplorePage = () => {
   const store_id = localStorage.getItem("storeId");
 
   const { data: banners, isLoading, isError } = useBanners(store_id!);
+  const {
+    data: recommendedProducts,
+    isLoading: recommendedProductsLoading,
+    isError: recommendedProductsError,
+  } = useRecommendedProducts(store_id!);
 
   const settings = {
     dots: false,
@@ -133,6 +139,22 @@ const ExplorePage = () => {
         >
           مشاهده همه
         </Button>
+      </Box>
+      <Box className="w-full flex gap-3 overflow-auto">
+        {recommendedProducts?.map((product, index) => (
+          <Box
+            key={index}
+            component={Paper}
+            className="flex flex-col items-center"
+          >
+            <img
+              src={API_BASE_URL + product.image_url ?? img}
+              width="100%"
+              // aspectRatio="16 / 9"
+            />
+        <Typography>{product.product_name}</Typography>
+          </Box>
+        ))}
       </Box>
     </Box>
   );

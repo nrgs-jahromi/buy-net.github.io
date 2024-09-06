@@ -10,6 +10,7 @@ import { useBanners } from "../../api/explore/getBanners";
 import { API_BASE_URL } from "../../api/config";
 import { useTopDiscountedProducts } from "../../api/explore/getSpecials";
 import { useRecommendedProducts } from "../../api/explore/getRecommendedList";
+import ProductCard from "./ProductCard";
 
 const ExplorePage = () => {
   const navigate = useNavigate();
@@ -27,6 +28,10 @@ const ExplorePage = () => {
     isError: recommendedProductsError,
   } = useRecommendedProducts(store_id!);
 
+  const combinedProducts = [
+    ...(discountedProducts?.top_discounted_products || []),
+    ...(discountedProducts?.expiring_soon_products || []),
+  ];
   const settings = {
     dots: false,
     dotsClass: "slick-dots slick-thumb",
@@ -130,38 +135,78 @@ const ExplorePage = () => {
         </Button>
       </Box>
 
-      {/* نمایش محصولات با تخفیف */}
       {discountedProductsLoading ? (
-        <Typography>در حال بارگذاری محصولات با تخفیف...</Typography>
+        <Typography>در حال بارگذاری محصولات...</Typography>
       ) : discountedProductsError ? (
-        <Typography>خطایی در بارگذاری محصولات با تخفیف رخ داده است</Typography>
-      ) : discountedProducts?.top_discounted_products.length > 0 ? (
+        <Typography>خطایی در بارگذاری محصولات رخ داده است</Typography>
+      ) : combinedProducts.length > 0 ? (
         <Box className="w-full flex gap-3 overflow-auto">
-          {discountedProducts.top_discounted_products.map((product, index) => (
-            <Box
-              key={index}
-              component={Paper}
-              className="flex flex-col items-center"
-              sx={{ width: 200 }}
-            >
-              <img
-                src={API_BASE_URL + product.image_url || img}
-                width="100%"
-                style={{ aspectRatio: "16 / 9", borderRadius: "8px" }}
-              />
-              <Typography variant="body2" fontWeight={"bold"}>
-                {product.product_barcode}
-              </Typography>
-              <Typography variant="body2" color={theme.palette.error.main}>
-                تخفیف: {product.discount_percentage}%
-              </Typography>
-            </Box>
+          {combinedProducts.map((product, index) => (
+            <ProductCard product={product}/>
+          //   <Box
+          //   key={index}
+          //   component={Paper}
+          //   className="flex flex-col items-center p-2 gap-2"
+          //   sx={{ minWidth: "30vw", width: "30vw", position: "relative"  , aspectRatio: "3 / 4"}} // اضافه کردن position relative برای کارت محصول
+          // >
+          //   {/* نمایش مثلث و درصد تخفیف */}
+          //   {product.discount?.discount_percentage > 0 && (
+          //     <Box
+          //       sx={{
+          //         position: "absolute",
+          //         top: 0,
+          //         left: 0,
+          //         width: 0,
+          //         height: 0,
+          //         borderLeft: "50px solid red", // رنگ قرمز مثلث
+          //         borderBottom: "50px solid transparent",
+          //         zIndex: 0,
+          //       }}
+          //     >
+          //       <Typography
+          //         sx={{
+          //           position: "absolute",
+          //           top: "5px",
+          //           left: "1px",
+          //           ml:-5,
+          //           color: "white",
+          //           fontSize: "12px",
+          //           fontWeight: "bold",
+          //         }}
+                  
+          //       >
+          //         {product.discount.discount_percentage}%
+          //       </Typography>
+          //     </Box>
+          //   )}
+          
+          //   <img
+          //     src={product.primary_image_url ?API_BASE_URL + product.primary_image_url :img}
+          //     width="100%"
+          //     style={{ aspectRatio: "4 / 3", borderRadius: "8px" }}
+          //   />
+          
+
+          //   <Typography variant="body2" fontWeight={"bold"} width={"100%"} align="right">
+          //     {product.name}
+          //   </Typography>
+          
+          //   {product.discount?.discount_percentage > 0 && (
+          //     <Typography variant="body2" color={theme.palette.error.main}>
+          //       تخفیف: {product.discount.discount_percentage}%
+          //     </Typography>
+          //   )}
+          //   {product.discount?.expiration_date && (
+          //     <Typography variant="body2" color={theme.palette.warning.main}>
+          //       انقضا: {product.discount.expiration_date}
+          //     </Typography>
+          //   )}
+          // </Box>
           ))}
         </Box>
       ) : (
-        <Typography>هیچ محصول با تخفیف یافت نشد</Typography>
+        <Typography>هیچ محصولی یافت نشد</Typography>
       )}
-
       <Box className="flex w-full items-center justify-between ">
         <Typography fontWeight={"bold"}>برای شما</Typography>
         <Button

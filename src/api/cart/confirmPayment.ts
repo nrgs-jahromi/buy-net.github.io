@@ -7,10 +7,28 @@ export type ConfirmPaymentDataT = {
   };
 };
 
-interface ConfirmPaymentResponse {
-  detail: string;
+interface Product {
+  name: string;
+  price: number;
+  primary_image_url: string;
 }
 
+interface Item {
+  product: Product;
+  quantity: number;
+  total_price_without_discount: number;
+  total_price_with_discount: number;
+}
+
+interface ConfirmPaymentResponse {
+  invoice_number: string;
+  store: string;
+  payable_amount: number;
+  total_price_without_discount: number;
+  tax: number;
+  total_price_with_discount: number;
+  items: Item[];
+}
 
 const confirmPayment = async (
   data: ConfirmPaymentDataT
@@ -25,8 +43,10 @@ export const useConfirmPayment = () => {
   const queryClient = useQueryClient();
 
   return useMutation(confirmPayment, {
-    onSuccess: () => {
+    onSuccess: (response) => {
       queryClient.invalidateQueries(["cart"]);
+      // Handle successful payment confirmation here
+      console.log("Payment confirmed:", response);
     },
     onError: (error) => {
       console.error("Error during payment confirmation:", error);

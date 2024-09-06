@@ -1,17 +1,24 @@
 import { ApiError, fetcher } from "../config";
 import { QueryFunction, UseQueryOptions, useQuery } from "@tanstack/react-query";
 
-type TopDiscountedProductsResponseT = {
-  top_discounted_products: {
-    product_barcode: number;
-    image_url: string;
+export type ProductT = {
+  barcode: string;
+  name: string;
+  price: number;
+  stock: number;
+  brand: string | null;
+  primary_image_url: string | null;
+  category_names: string[];
+  discount: {
     discount_percentage: number;
-  }[];
-  expiring_soon_products: {
-    product_barcode: number;
-    image_url: string;
-    expiration_date: string;
-  }[];
+    expiration_date: string | null;
+    min_quantity_for_discount: number;
+  };
+};
+
+type TopDiscountedProductsResponseT = {
+  top_discounted_products: ProductT[];
+  expiring_soon_products: ProductT[];
 };
 
 type QueryKey = ["topDiscountedProducts", { store_id: string }];

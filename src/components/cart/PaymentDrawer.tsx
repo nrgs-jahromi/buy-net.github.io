@@ -20,6 +20,7 @@ interface PaymentDrawerProps {
   totalItems: number;
   totalAmount: number;
   discount: number;
+  tax: string;
 }
 
 const drawerBleeding = 56;
@@ -40,6 +41,7 @@ const PaymentDrawer: FC<PaymentDrawerProps> = ({
   totalItems,
   totalAmount,
   discount,
+  tax,
 }) => {
   const storeId = localStorage.getItem("storeId")!;
   const { mutate: confirmPayment, isLoading: isConfirmLoading } =
@@ -55,7 +57,7 @@ const PaymentDrawer: FC<PaymentDrawerProps> = ({
     },
   });
 
-  const payableAmount = totalAmount - discount;
+  const payableAmount = totalAmount - discount +totalAmount * Number(tax);
   const handleConfirmAndPay = () => {
     confirmPayment(
       { params: { storeId } },
@@ -126,6 +128,12 @@ const PaymentDrawer: FC<PaymentDrawerProps> = ({
             <Typography variant="body1">سود شما از خرید</Typography>
             <Typography variant="body1" fontWeight={"bold"}>
               {discount.toLocaleString()}
+            </Typography>
+          </Box>
+          <Box className="w-full flex justify-between items-center">
+            <Typography variant="body1">مالیات </Typography>
+            <Typography variant="body1" fontWeight={"bold"}>
+            {(totalAmount * Number(tax)).toLocaleString()}
             </Typography>
           </Box>
           <Box className="w-full flex justify-between items-center">

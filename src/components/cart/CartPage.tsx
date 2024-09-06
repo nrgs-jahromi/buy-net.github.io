@@ -140,6 +140,7 @@ const CartPage = () => {
           discount={calculateTotalPrice() - cartData.total_price}
           totalAmount={calculateTotalPrice()}
           totalItems={cartData.total_quantity}
+          tax={cartData.tax_percentage}
         />
       )}
     </Box>

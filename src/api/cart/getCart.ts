@@ -27,6 +27,8 @@ type CartT = {
   items: CartItemT[];
   total_quantity: number;
   total_price: number;
+  tax_percentage:string;
+
 };
 
 type QueryKey = ["cart", { store_id: string }];

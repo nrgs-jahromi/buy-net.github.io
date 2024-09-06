@@ -1,5 +1,10 @@
 import { Box, Paper, Typography, Avatar } from "@mui/material";
 import { FC } from "react";
+import { API_BASE_URL } from "../../../api/config";
+import dayjs from "dayjs";
+import jalaliday from "jalaliday";
+
+dayjs.extend(jalaliday);
 
 interface HistoryCardProps {
   storeImage: string;
@@ -8,6 +13,10 @@ interface HistoryCardProps {
   amount: string;
   onViewInvoice: () => void;
 }
+
+const formatDateTime = (dateTime: string) => {
+  return dayjs(dateTime).calendar('jalali').format('YYYY/MM/DD - HH:mm');
+};
 
 const HistoryCard: FC<HistoryCardProps> = ({
   storeImage,
@@ -25,7 +34,7 @@ const HistoryCard: FC<HistoryCardProps> = ({
       sx={{ cursor: "pointer" }}
     >
       <Avatar
-        src={storeImage}
+        src={API_BASE_URL + storeImage}
         alt={storeName}
         sx={{ width: 60, height: 60, borderRadius: "8px" }}
       />
@@ -37,7 +46,7 @@ const HistoryCard: FC<HistoryCardProps> = ({
         </Box>
         <Box className="w-full flex justify-between items-center">
           <Typography>{amount}</Typography>
-          <Typography variant="caption">{dateTime}</Typography>
+          <Typography variant="caption">{formatDateTime(dateTime)}</Typography>
         </Box>
       </Box>
     </Box>

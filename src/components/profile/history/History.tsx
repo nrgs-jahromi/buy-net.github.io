@@ -52,7 +52,7 @@ const History = () => {
             </Box>
             <Box className="flex flex-col justify-center items-center">
               <Typography variant="body1" fontWeight={"bold"}>
-                {summaryData?.total_purchase_amount}
+                {summaryData?.total_purchases}
               </Typography>
               <Typography variant="body2" align="center">
                 تعداد کل خریدها

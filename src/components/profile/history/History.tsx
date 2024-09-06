@@ -4,6 +4,10 @@ import { useState } from "react";
 import HistoryCard from "./HistoryCard";
 import InvoiceDrawer from "./InvoiceDrawer";
 import { usePurchaseSummary } from "../../../api/invoice/getInvoice";
+import IconBox from "../../common/IconBox";
+import theme from "../../../theme";
+import { MdStorefront } from "react-icons/md";
+import { ArchiveTick, BuyCrypto } from "iconsax-react";
 
 const History = () => {
   const { data: purchases, isLoading, isError } = useInvoices();
@@ -42,28 +46,33 @@ const History = () => {
           <CircularProgress />
         ) : (
           <>
-            <Box className="flex flex-col justify-center items-center">
+            <Box className="flex flex-col justify-center items-center space-y-1">
+              <IconBox color={theme.palette.primary.main} size={48} borderRadius="8px" icon={<MdStorefront/>}/>
               <Typography variant="body1" fontWeight={"bold"}>
                 {summaryData?.store_count}
               </Typography>
               <Typography variant="body2" align="center">
-                تعداد فروشگاه‌ها
+                 فروشگاه‌ها
               </Typography>
             </Box>
-            <Box className="flex flex-col justify-center items-center">
+            <Box className="flex flex-col justify-center items-center space-y-1">
+            <IconBox color={theme.palette.primary.main} size={48} borderRadius="8px" icon={<ArchiveTick/>}/>
+
               <Typography variant="body1" fontWeight={"bold"}>
                 {summaryData?.total_purchases}
               </Typography>
               <Typography variant="body2" align="center">
-                تعداد کل خریدها
+                خریدها
               </Typography>
             </Box>
-            <Box className="flex flex-col justify-center items-center">
+            <Box className="flex flex-col justify-center items-center space-y-1">
+            <IconBox color={theme.palette.primary.main} size={48} borderRadius="8px" icon={<BuyCrypto/>}/>
+
               <Typography variant="body1" fontWeight={"bold"}>
                 {summaryData?.total_purchase_amount.toLocaleString()} تومان
               </Typography>
               <Typography variant="body2" align="center">
-                مقدار کل هزینه شده
+                  هزینه‌ها
               </Typography>
             </Box>
           </>

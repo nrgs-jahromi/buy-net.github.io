@@ -3,21 +3,24 @@ import logo from "../../assets/temp logo/logo.png";
 import theme from "../../theme";
 import { ArrowLeft2 } from "iconsax-react";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { useSwipeable } from "react-swipeable";
+import { useState } from "react";
 import Slider from "react-slick";
-import img from "../../assets/DefaultImage.png"; // تصویر پیش‌فرض
+import img from "../../assets/DefaultImage.png";
 import { useBanners } from "../../api/explore/getBanners";
 import { API_BASE_URL } from "../../api/config";
-import { useRecommendedProducts } from "../../api/explore/getSpecail";
+import { useTopDiscountedProducts } from "../../api/explore/getSpecials";
+import { useRecommendedProducts } from "../../api/explore/getRecommendedList";
 
 const ExplorePage = () => {
   const navigate = useNavigate();
-  const [currentCardIndex, setCurrentCardIndex] = useState(0);
-
   const store_id = localStorage.getItem("storeId");
 
   const { data: banners, isLoading, isError } = useBanners(store_id!);
+  const {
+    data: discountedProducts,
+    isLoading: discountedProductsLoading,
+    isError: discountedProductsError,
+  } = useTopDiscountedProducts(store_id!);
   const {
     data: recommendedProducts,
     isLoading: recommendedProductsLoading,
@@ -69,7 +72,6 @@ const ExplorePage = () => {
                 alignItems: "center",
                 width: "100%",
                 aspectRatio: "16 / 9",
-
                 borderRadius: "16px",
               }}
               onClick={() => navigate(`/products/${banner.product_barcode}`)}
@@ -96,7 +98,6 @@ const ExplorePage = () => {
             alignItems: "center",
             width: "100%",
             aspectRatio: "16 / 9",
-
             borderRadius: "16px",
           }}
           onClick={() => navigate(`/products/${banners[0].product_barcode}`)}
@@ -118,7 +119,7 @@ const ExplorePage = () => {
       )}
 
       <Box className="flex w-full items-center justify-between">
-        <Typography fontWeight={"bold"}>تخفیفات ویژه </Typography>
+        <Typography fontWeight={"bold"}>تخفیفات ویژه</Typography>
         <Button
           size="small"
           sx={{ color: theme.palette.grey[400] }}
@@ -128,6 +129,38 @@ const ExplorePage = () => {
           مشاهده همه
         </Button>
       </Box>
+
+      {/* نمایش محصولات با تخفیف */}
+      {discountedProductsLoading ? (
+        <Typography>در حال بارگذاری محصولات با تخفیف...</Typography>
+      ) : discountedProductsError ? (
+        <Typography>خطایی در بارگذاری محصولات با تخفیف رخ داده است</Typography>
+      ) : discountedProducts?.top_discounted_products.length > 0 ? (
+        <Box className="w-full flex gap-3 overflow-auto">
+          {discountedProducts.top_discounted_products.map((product, index) => (
+            <Box
+              key={index}
+              component={Paper}
+              className="flex flex-col items-center"
+              sx={{ width: 200 }}
+            >
+              <img
+                src={API_BASE_URL + product.image_url || img}
+                width="100%"
+                style={{ aspectRatio: "16 / 9", borderRadius: "8px" }}
+              />
+              <Typography variant="body2" fontWeight={"bold"}>
+                {product.product_barcode}
+              </Typography>
+              <Typography variant="body2" color={theme.palette.error.main}>
+                تخفیف: {product.discount_percentage}%
+              </Typography>
+            </Box>
+          ))}
+        </Box>
+      ) : (
+        <Typography>هیچ محصول با تخفیف یافت نشد</Typography>
+      )}
 
       <Box className="flex w-full items-center justify-between ">
         <Typography fontWeight={"bold"}>برای شما</Typography>
@@ -140,19 +173,24 @@ const ExplorePage = () => {
           مشاهده همه
         </Button>
       </Box>
+
+      {/* نمایش لیست محصولات پیشنهادی */}
       <Box className="w-full flex gap-3 overflow-auto">
         {recommendedProducts?.map((product, index) => (
           <Box
             key={index}
             component={Paper}
             className="flex flex-col items-center"
+            sx={{ width: 200 }}
           >
             <img
-              src={API_BASE_URL + product.image_url ?? img}
+              src={API_BASE_URL + product.image_url || img}
               width="100%"
-              // aspectRatio="16 / 9"
+              style={{ aspectRatio: "16 / 9", borderRadius: "8px" }}
             />
-        <Typography>{product.product_name}</Typography>
+            <Typography variant="body2" fontWeight={"bold"}>
+              {product.product_name}
+            </Typography>
           </Box>
         ))}
       </Box>

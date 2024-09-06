@@ -229,12 +229,12 @@ const ExplorePage = () => {
             sx={{ width: 200 }}
           >
             <img
-              src={API_BASE_URL + product.image_url || img}
+              src={API_BASE_URL + product.primary_image_url || img}
               width="100%"
               style={{ aspectRatio: "16 / 9", borderRadius: "8px" }}
             />
             <Typography variant="body2" fontWeight={"bold"}>
-              {product.product_name}
+              {product.name}
             </Typography>
           </Box>
         ))}

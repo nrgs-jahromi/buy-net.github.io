@@ -1,4 +1,10 @@
-import { Box, CircularProgress, Paper, Typography } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  lighten,
+  Paper,
+  Typography,
+} from "@mui/material";
 import { PurchasedT, useInvoices } from "../../../api/invoice/getInvoiceList";
 import { useState } from "react";
 import HistoryCard from "./HistoryCard";
@@ -47,16 +53,26 @@ const History = () => {
         ) : (
           <>
             <Box className="flex flex-col justify-center items-center space-y-1">
-              <IconBox color={theme.palette.primary.main} size={48} borderRadius="8px" icon={<MdStorefront/>}/>
+              <IconBox
+                color={lighten(theme.palette.primary.light, 0.7)}
+                size={48}
+                borderRadius="8px"
+                icon={<MdStorefront color={theme.palette.primary.main} />}
+              />
               <Typography variant="body1" fontWeight={"bold"}>
                 {summaryData?.store_count}
               </Typography>
               <Typography variant="body2" align="center">
-                 فروشگاه‌ها
+                فروشگاه‌ها
               </Typography>
             </Box>
             <Box className="flex flex-col justify-center items-center space-y-1">
-            <IconBox color={theme.palette.primary.main} size={48} borderRadius="8px" icon={<ArchiveTick/>}/>
+              <IconBox
+                color={lighten(theme.palette.primary.light, 0.7)}
+                size={48}
+                borderRadius="8px"
+                icon={<ArchiveTick color={theme.palette.primary.main} />}
+              />
 
               <Typography variant="body1" fontWeight={"bold"}>
                 {summaryData?.total_purchases}
@@ -66,25 +82,30 @@ const History = () => {
               </Typography>
             </Box>
             <Box className="flex flex-col justify-center items-center space-y-1">
-            <IconBox color={theme.palette.primary.main} size={48} borderRadius="8px" icon={<BuyCrypto/>}/>
+              <IconBox
+                color={lighten(theme.palette.primary.light, 0.7)}
+                size={48}
+                borderRadius="8px"
+                icon={<BuyCrypto color={theme.palette.primary.main} />}
+              />
 
               <Typography variant="body1" fontWeight={"bold"}>
                 {summaryData?.total_purchase_amount.toLocaleString()} تومان
               </Typography>
               <Typography variant="body2" align="center">
-                  هزینه‌ها
+                هزینه‌ها
               </Typography>
             </Box>
           </>
         )}
       </Box>
-      {purchases?.map((purchase, index) => (
+      {purchases?.slice().reverse().map((purchase, index) => (
         <HistoryCard
           key={index}
           storeImage={purchase.store_logo}
           storeName={purchase.store_name}
           dateTime={purchase.purchase_time}
-          amount={"10"}
+          amount={purchase.payable_amount}
           onViewInvoice={() => handleViewInvoice(purchase)}
         />
       ))}

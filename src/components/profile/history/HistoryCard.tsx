@@ -10,7 +10,7 @@ interface HistoryCardProps {
   storeImage: string;
   storeName: string;
   dateTime: string;
-  amount: string;
+  amount: number;
   onViewInvoice: () => void;
 }
 
@@ -45,7 +45,7 @@ const HistoryCard: FC<HistoryCardProps> = ({
           </Typography>
         </Box>
         <Box className="w-full flex justify-between items-center">
-          <Typography>{amount}</Typography>
+          <Typography>{amount.toLocaleString()}<span style={{fontSize:"12px"}}>تومان</span></Typography>
           <Typography variant="caption">{formatDateTime(dateTime)}</Typography>
         </Box>
       </Box>

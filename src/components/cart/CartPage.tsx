@@ -78,7 +78,7 @@ const CartPage = () => {
       errorDetail === "No Cart matches the given query."
     ) {
       return <Box className="p-4">
-        <Alert severity="warning">هیچ محصولی در سبد خرید شما وجود ندارد</Alert>
+        <Alert severity="info">هیچ محصولی در سبد خرید شما وجود ندارد</Alert>
       </Box>
      
     }

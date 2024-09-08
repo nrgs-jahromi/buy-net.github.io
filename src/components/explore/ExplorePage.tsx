@@ -10,7 +10,7 @@ import { API_BASE_URL } from "../../api/config";
 import { useTopDiscountedProducts } from "../../api/explore/getSpecials";
 import { useRecommendedProducts } from "../../api/explore/getRecommendedList";
 import ProductCard from "./ProductCard";
-import img2 from "../../assets/fresh.png";
+import img2 from "../../assets/pngtree-cart-with-sale-items-png-image_12624062_prev_ui.png";
 
 const ExplorePage = () => {
   const navigate = useNavigate();
@@ -130,7 +130,7 @@ const ExplorePage = () => {
       ) : combinedProducts.length > 0 ? (
         <Box
           className="w-dvw flex gap-1 overflow-auto p-8 -mx-8"
-          bgcolor={"#EF4056"}
+          bgcolor={theme.palette.primary.main}
         >
           <Box
             className="flex flex-col items-center gap-10"
@@ -150,7 +150,7 @@ const ExplorePage = () => {
             >
               پیشنهاد شگفت انگیز
             </Typography>
-            <img src={img2} style={{ marginLeft: "30%" }} width={"80%"}></img>
+            <img src={img2} style={{ marginLeft: "30%" }} width={"90%"}></img>
           </Box>
           {combinedProducts.map((product, index) => (
             <ProductCard product={product} />
@@ -177,11 +177,11 @@ const ExplorePage = () => {
         sx={{
           display: "grid",
           gridTemplateColumns: "repeat(3, 1fr)",
-          gridTemplateRows: "repeat(3, 1fr)",
-          gap: 2,
+          gridTemplateRows: "repeat(2, 1fr)",
+          gap: 1.5,
         }}
       >
-        {recommendedProducts?.slice(0, 9).map((product, index) => (
+        {recommendedProducts?.map((product, index) => (
           <Box
             key={index}
             onClick={() => navigate(`/products/${product.barcode}`)}
@@ -189,6 +189,8 @@ const ExplorePage = () => {
               width: "100%",
               aspectRatio: "1/1",
               overflow: "hidden",
+              borderRadius: "8px",
+
               border: "1px solid #e0e0e0",
             }}
             
@@ -204,7 +206,7 @@ const ExplorePage = () => {
                 width: "100%",
                 height: "100%",
                 objectFit: "cover",
-                borderRadius: "4px",
+                // borderRadius: "16px",
               }}
             />
           </Box>

@@ -19,7 +19,7 @@ export type ProductDetailsResponse = {
   store: number | null;
   discount: Discount | null;
   categories: string[];
-  primary_image: string | null;
+  primary_image: { id: number; image: string; is_primary: boolean } | null;
   images: { id: number; image: string; is_primary: boolean }[];
 };
 

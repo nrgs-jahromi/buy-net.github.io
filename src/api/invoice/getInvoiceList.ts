@@ -10,6 +10,7 @@ export type PurchasedT = {
   purchase_time: string;
   invoice_id: string;
   store_logo: string;
+  payable_amount:number;
 };
 
 type ResT = PurchasedT[];

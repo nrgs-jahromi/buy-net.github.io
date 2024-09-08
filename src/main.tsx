@@ -23,7 +23,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <SnackbarProvider maxSnack={4}>
+        <SnackbarProvider maxSnack={2}>
           <App />
         </SnackbarProvider>
       </ThemeProvider>

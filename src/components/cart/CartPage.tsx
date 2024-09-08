@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Alert, Box, Button, Typography } from "@mui/material";
 import { useState } from "react";
 import CartProductCard from "./CartProductCard";
 import theme from "../../theme";
@@ -77,10 +77,15 @@ const CartPage = () => {
       typeof errorDetail === "string" &&
       errorDetail === "No Cart matches the given query."
     ) {
-      return <Typography>هیچ محصولی در سبد خرید شما وجود ندارد</Typography>;
+      return <Box className="p-4">
+        <Alert severity="warning">هیچ محصولی در سبد خرید شما وجود ندارد</Alert>
+      </Box>
+     
     }
 
-    return <Typography>خطا در دریافت اطلاعات سبد خرید.</Typography>;
+    return <Box className="p-4">
+    <Alert severity="error">خطا در دریافت اطلاعات سبد خرید.</Alert>
+  </Box>
   }
 
   return (

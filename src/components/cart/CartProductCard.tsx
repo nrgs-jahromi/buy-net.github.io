@@ -5,7 +5,7 @@ import { useSwipeable } from "react-swipeable";
 import { Trash, Add, Minus } from "iconsax-react";
 import theme from "../../theme";
 import { API_BASE_URL } from "../../api/config";
-import img1 from "../../assets/DefaultImage.png";
+import img1 from "../../assets/scangray.svg";
 import { useMutation } from "@tanstack/react-query";
 import { useAddToCart } from "../../api/cart/addToCart";
 import { CartItemT } from "../../api/cart/getCart";

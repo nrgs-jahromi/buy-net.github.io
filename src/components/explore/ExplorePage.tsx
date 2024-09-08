@@ -3,7 +3,6 @@ import logo from "../../assets/temp logo/logo.png";
 import theme from "../../theme";
 import { ArrowLeft2 } from "iconsax-react";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 import Slider from "react-slick";
 import img from "../../assets/DefaultImage.png";
 import { useBanners } from "../../api/explore/getBanners";
@@ -11,6 +10,7 @@ import { API_BASE_URL } from "../../api/config";
 import { useTopDiscountedProducts } from "../../api/explore/getSpecials";
 import { useRecommendedProducts } from "../../api/explore/getRecommendedList";
 import ProductCard from "./ProductCard";
+import img2 from "../../assets/fresh.png";
 
 const ExplorePage = () => {
   const navigate = useNavigate();
@@ -32,6 +32,7 @@ const ExplorePage = () => {
     ...(discountedProducts?.top_discounted_products || []),
     ...(discountedProducts?.expiring_soon_products || []),
   ];
+  
   const settings = {
     dots: false,
     dotsClass: "slick-dots slick-thumb",
@@ -45,15 +46,15 @@ const ExplorePage = () => {
 
   return (
     <Box className="p-8 space-y-3">
-      <Box className="flex justify-start gap-4 items-center">
+      <Box className="flex justify-start gap-4 items-center" height={90}>
         <img
           src={API_BASE_URL + localStorage.getItem("storeIcon") || logo}
-          height={70}
-          width={70}
+          height={90}
+          width={90}
           style={{ borderRadius: "50%" }}
         />
         <Typography
-          variant="h6"
+          variant="h5"
           fontWeight={"bold"}
           color={theme.palette.primary.main}
         >
@@ -61,7 +62,6 @@ const ExplorePage = () => {
         </Typography>
       </Box>
 
-      {/* بررسی وضعیت بارگیری بنرها */}
       {isLoading ? (
         <Typography>در حال بارگذاری...</Typography>
       ) : isError ? (
@@ -123,119 +123,90 @@ const ExplorePage = () => {
         <Typography>هیچ بنری یافت نشد</Typography>
       )}
 
-      <Box className="flex w-full items-center justify-between">
-        <Typography fontWeight={"bold"}>تخفیفات ویژه</Typography>
-        <Button
-          size="small"
-          sx={{ color: theme.palette.grey[400] }}
-          endIcon={<ArrowLeft2 size={16} />}
-          //   onClick={() => navigate("/history")}
-        >
-          مشاهده همه
-        </Button>
-      </Box>
-
       {discountedProductsLoading ? (
         <Typography>در حال بارگذاری محصولات...</Typography>
       ) : discountedProductsError ? (
         <Typography>خطایی در بارگذاری محصولات رخ داده است</Typography>
       ) : combinedProducts.length > 0 ? (
-        <Box className="w-full flex gap-3 overflow-auto">
+        <Box
+          className="w-dvw flex gap-1 overflow-auto p-8 -mx-8"
+          bgcolor={"#EF4056"}
+        >
+          <Box
+            className="flex flex-col items-center gap-10"
+            sx={{
+              minWidth: "150px",
+              maxWidth: "150px",
+              height: 300,
+              position: "relative",
+              borderRadius: "8px",
+            }}
+          >
+            <Typography
+              variant="h4"
+              fontWeight={"bold"}
+              color={"white"}
+              align="justify"
+            >
+              پیشنهاد شگفت انگیز
+            </Typography>
+            <img src={img2} style={{ marginLeft: "30%" }} width={"80%"}></img>
+          </Box>
           {combinedProducts.map((product, index) => (
-            <ProductCard product={product}/>
-          //   <Box
-          //   key={index}
-          //   component={Paper}
-          //   className="flex flex-col items-center p-2 gap-2"
-          //   sx={{ minWidth: "30vw", width: "30vw", position: "relative"  , aspectRatio: "3 / 4"}} // اضافه کردن position relative برای کارت محصول
-          // >
-          //   {/* نمایش مثلث و درصد تخفیف */}
-          //   {product.discount?.discount_percentage > 0 && (
-          //     <Box
-          //       sx={{
-          //         position: "absolute",
-          //         top: 0,
-          //         left: 0,
-          //         width: 0,
-          //         height: 0,
-          //         borderLeft: "50px solid red", // رنگ قرمز مثلث
-          //         borderBottom: "50px solid transparent",
-          //         zIndex: 0,
-          //       }}
-          //     >
-          //       <Typography
-          //         sx={{
-          //           position: "absolute",
-          //           top: "5px",
-          //           left: "1px",
-          //           ml:-5,
-          //           color: "white",
-          //           fontSize: "12px",
-          //           fontWeight: "bold",
-          //         }}
-                  
-          //       >
-          //         {product.discount.discount_percentage}%
-          //       </Typography>
-          //     </Box>
-          //   )}
-          
-          //   <img
-          //     src={product.primary_image_url ?API_BASE_URL + product.primary_image_url :img}
-          //     width="100%"
-          //     style={{ aspectRatio: "4 / 3", borderRadius: "8px" }}
-          //   />
-          
-
-          //   <Typography variant="body2" fontWeight={"bold"} width={"100%"} align="right">
-          //     {product.name}
-          //   </Typography>
-          
-          //   {product.discount?.discount_percentage > 0 && (
-          //     <Typography variant="body2" color={theme.palette.error.main}>
-          //       تخفیف: {product.discount.discount_percentage}%
-          //     </Typography>
-          //   )}
-          //   {product.discount?.expiration_date && (
-          //     <Typography variant="body2" color={theme.palette.warning.main}>
-          //       انقضا: {product.discount.expiration_date}
-          //     </Typography>
-          //   )}
-          // </Box>
+            <ProductCard product={product} />
           ))}
         </Box>
       ) : (
         <Typography>هیچ محصولی یافت نشد</Typography>
       )}
+
       <Box className="flex w-full items-center justify-between ">
-        <Typography fontWeight={"bold"}>برای شما</Typography>
+        <Typography variant="h6" fontWeight={"bold"}>
+          برای شما
+        </Typography>
         <Button
           size="small"
           sx={{ color: theme.palette.grey[400] }}
           endIcon={<ArrowLeft2 size={16} />}
-          //   onClick={() => navigate("/history")}
         >
           مشاهده همه
         </Button>
       </Box>
 
-      {/* نمایش لیست محصولات پیشنهادی */}
-      <Box className="w-full flex gap-3 overflow-auto">
-        {recommendedProducts?.map((product, index) => (
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: "repeat(3, 1fr)",
+          gridTemplateRows: "repeat(3, 1fr)",
+          gap: 2,
+        }}
+      >
+        {recommendedProducts?.slice(0, 9).map((product, index) => (
           <Box
             key={index}
-            component={Paper}
-            className="flex flex-col items-center"
-            sx={{ width: 200 }}
+            onClick={() => navigate(`/products/${product.barcode}`)}
+            sx={{
+              width: "100%",
+              aspectRatio: "1/1",
+              overflow: "hidden",
+              border: "1px solid #e0e0e0",
+            }}
+            
           >
             <img
-              src={API_BASE_URL + product.primary_image_url || img}
-              width="100%"
-              style={{ aspectRatio: "16 / 9", borderRadius: "8px" }}
+              src={
+                product.primary_image_url
+                  ? API_BASE_URL + product.primary_image_url
+                  : img
+              }
+              alt={product.name}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                borderRadius: "4px",
+              }}
             />
-            <Typography variant="body2" fontWeight={"bold"}>
-              {product.name}
-            </Typography>
           </Box>
         ))}
       </Box>

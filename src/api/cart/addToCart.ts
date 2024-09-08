@@ -31,6 +31,7 @@ export const useAddToCart = () => {
   return useMutation(addToCart, {
     onSuccess: () => {
       queryClient.invalidateQueries(["cart"]);
+      queryClient.refetchQueries(["cart"]);
     },
     onError: (error) => {
       console.error("Error adding product to cart:", error);

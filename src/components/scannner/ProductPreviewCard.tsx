@@ -100,7 +100,7 @@ const ProductPopover: React.FC<ProductPopoverProps> = ({
       >
         <Box className="w-full flex p-3">
           <img
-            src={productDetails.primary_image? API_BASE_URL+productDetails.primary_image: Img}
+            src={productDetails.primary_image? API_BASE_URL+productDetails.primary_image.image : Img}
             height={60}
             width={60}
             style={{ borderRadius: "8px" }}

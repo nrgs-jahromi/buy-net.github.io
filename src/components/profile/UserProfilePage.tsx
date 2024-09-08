@@ -29,16 +29,16 @@ const UserProfilePage: React.FC = () => {
   const [usernameDrawerOpen, setUsernameDrawerOpen] = useState(false);
   const [userInfoDrawerOpen, setUserInfoDrawerOpen] = useState(false);
   const { mutate: logout, isLoading } = useUserLogout();
-  const {data:userDetail , isLoading:userDetailIsLoading} = useUserDetails()
+  const { data: userDetail, isLoading: userDetailIsLoading } = useUserDetails();
   const handleLogout = () => {
     logout(undefined, {
       onSuccess: () => {
-        localStorage.removeItem("accessToken"); 
-        navigate("/login"); 
+        localStorage.removeItem("accessToken");
+        navigate("/login");
       },
       onError: (error) => {
-        console.error("Error logging out:", error); 
-      }
+        console.error("Error logging out:", error);
+      },
     });
   };
   const toggleUsernameDrawer = (open: boolean) => () => {
@@ -88,7 +88,7 @@ const UserProfilePage: React.FC = () => {
           <Box sx={{ ...glassStyle }}>
             <Box sx={{ ...glassStyle }}>
               <Box sx={{ ...glassStyle, width: 100, height: 100 }}>
-              <Typography variant="h4" fontWeight={"700"}>
+                <Typography variant="h4" fontWeight={"700"}>
                   {userDetail?.username?.charAt(0)?.toUpperCase() || "ک"}
                 </Typography>
               </Box>
@@ -114,7 +114,7 @@ const UserProfilePage: React.FC = () => {
           variant="body1"
           fontWeight={"bold"}
         >
-           {userDetail?.username}
+          {userDetail?.username}
         </Typography>
       </Box>
       <Box className="p-8 flex flex-col text-natural-400 gap-8">
@@ -161,6 +161,7 @@ const UserProfilePage: React.FC = () => {
             color={theme.palette.text.primary}
             sx={{
               px: 0,
+              pl:3,
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
@@ -205,8 +206,8 @@ const UserProfilePage: React.FC = () => {
               endIcon={<ArrowLeft2 size={16} />}
               onClick={toggleUsernameDrawer(true)}
             >
-           {userDetail?.username}
-          </Button>
+              {userDetail?.username}
+            </Button>
           </ListItem>
           <Divider />
 
@@ -236,17 +237,24 @@ const UserProfilePage: React.FC = () => {
               endIcon={<ArrowLeft2 size={16} />}
               onClick={toggleUserInfoDrawer(true)}
             >
-              {userDetail?.first_name ?? "ویرایش"  }
+              {userDetail?.first_name ?? "ویرایش"}
+              {" " + userDetail?.last_name ?? ""}
             </Button>
           </ListItem>
         </Box>
-        <Button onClick={handleLogout} >خروج از حساب کاربری</Button>
+        <Button onClick={handleLogout}>خروج از حساب کاربری</Button>
       </Box>
       {usernameDrawerOpen && (
-        <UsernameDrawer open={usernameDrawerOpen} toggleDrawer={toggleUsernameDrawer} />
+        <UsernameDrawer
+          open={usernameDrawerOpen}
+          toggleDrawer={toggleUsernameDrawer}
+        />
       )}
       {userInfoDrawerOpen && (
-        <UserInfoDrawer open={userInfoDrawerOpen} toggleDrawer={toggleUserInfoDrawer} />
+        <UserInfoDrawer
+          open={userInfoDrawerOpen}
+          toggleDrawer={toggleUserInfoDrawer}
+        />
       )}
     </Box>
   );

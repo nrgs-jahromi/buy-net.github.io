@@ -6,13 +6,14 @@ import {
   ClickAwayListener,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import Img from "../../assets/E-Wallet-pana.svg";
+import Img from "../../assets/scangray.svg";
 import { Add } from "iconsax-react";
 import { useNavigate } from "react-router-dom";
 import { ProductDetailsResponse } from "../../api/product/getProductDetail";
 import ProductDetail from "../product/ProductDetail";
 import { useAddToCart } from "../../api/cart/addToCart";
 import { notif } from "../common/notification/Notification";
+import { API_BASE_URL } from "../../api/config";
 
 interface ProductPopoverProps {
   anchorEl: HTMLElement | null;
@@ -99,7 +100,7 @@ const ProductPopover: React.FC<ProductPopoverProps> = ({
       >
         <Box className="w-full flex p-3">
           <img
-            src={Img}
+            src={productDetails.primary_image? API_BASE_URL+productDetails.primary_image: Img}
             height={60}
             width={60}
             style={{ borderRadius: "8px" }}

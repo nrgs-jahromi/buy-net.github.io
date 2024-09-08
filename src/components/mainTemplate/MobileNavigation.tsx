@@ -2,13 +2,7 @@ import { ReactNode, useEffect, useMemo, useState } from "react";
 import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import Paper from "@mui/material/Paper";
-import {
-  Check,
-  Flash,
-  Profile,
-  SearchNormal1,
-  ShoppingCart,
-} from "iconsax-react";
+import { Check, Flash, Profile, SearchNormal1, ShoppingCart } from "iconsax-react";
 import { useNavigate } from "react-router";
 import theme from "../../theme";
 
@@ -21,7 +15,7 @@ export type NavbarItem = {
 };
 
 export default function FixedBottomNavigation() {
-  const [value, setValue] = useState<number|null>(null);
+  const [value, setValue] = useState<number | null>(null);
   const [active, setActive] = useState<string | null>(null);
   const navigate = useNavigate();
 
@@ -31,93 +25,89 @@ export default function FixedBottomNavigation() {
         id: "cart",
         label: "سبد خرید",
         path: "cart",
-        icon1: <ShoppingCart size={24} />,
-        icon2: <ShoppingCart variant="Bold" size={30} />,
+        icon1: <ShoppingCart size={22} />,
+        icon2: <ShoppingCart variant="Bold" size={26} />,
       },
       {
         id: "explore",
         label: "فروشگاه",
         path: "explore",
-        icon1: <Flash size={24} />,
-        icon2: <Flash variant="Bold" size={30} />,
+        icon1: <Flash size={22} />,
+        icon2: <Flash variant="Bold" size={26} />,
       },
-
       {
         id: "scan",
         label: "",
-        icon1: <Check size={24} />,
-        icon2: <Check variant="Bold" size={30} />,
+        icon1: <Check size={22} />,
+        icon2: <Check variant="Bold" size={26} />,
         path: "scanner",
       },
       {
         id: "Search",
         label: "جستجو",
-        icon1: <SearchNormal1 size={24} />,
-        icon2: <SearchNormal1 variant="Bold" size={30} />,
+        icon1: <SearchNormal1 size={22} />,
+        icon2: <SearchNormal1 variant="Bold" size={26} />,
         path: "search",
       },
       {
         id: "profile",
         label: "حساب کاربری",
-        icon1: <Profile size={24} />,
-        icon2: <Profile variant="Bold" size={30} />,
+        icon1: <Profile size={22} />,
+        icon2: <Profile variant="Bold" size={26} />,
         path: "profile",
       },
     ],
     []
   );
+
   const onNavItemClick = (item: NavbarItem) => {
     setActive(item.id);
     navigate(item.path);
   };
 
-
   useEffect(() => {
     const pathParts = window.location.pathname.split("/");
     const lastPathPart = pathParts[pathParts.length - 1];
 
-    const matchingNavbarItem = navbarItems.find((item) => lastPathPart === item.id);
+    const matchingNavbarItem = navbarItems.find((item) => item.path === lastPathPart);
     if (matchingNavbarItem) {
       setActive(matchingNavbarItem.id);
       setValue(navbarItems.indexOf(matchingNavbarItem)); 
     }
   }, [navbarItems]);
 
-
   return (
-    <>
-      <Paper
+    <Paper
+      sx={{
+        position: "fixed",
+        bottom: 0,
+        left: 0,
+        right: 0,
+        border: 0,
+      }}
+      elevation={3}
+    >
+      <BottomNavigation
         sx={{
-          position: "fixed",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          border: 0,
+          height: "64px",
+          boxShadow: " 0 -4px 4px rgba(0, 0, 0, 0.1)",
+          bgcolor: theme.palette.background.default,
+          borderTop: "0",
         }}
-        elevation={3}
+        showLabels
+        value={value}
+        onChange={(event, newValue) => {
+          setValue(newValue);
+          onNavItemClick(navbarItems[newValue]);
+        }}
       >
-        <BottomNavigation
-          sx={{
-            height: "72px",
-            boxShadow: " 0 -4px 4px rgba(0, 0, 0, 0.1)",
-            bgcolor: theme.palette.background.default,
-            borderTop: "0",
-          }}
-          showLabels
-          value={value}
-          onChange={(event, newValue) => {
-            setValue(newValue);
-            onNavItemClick(navbarItems[newValue]);
-          }}
-        >
-          {navbarItems.map((item, index) => (
-            <BottomNavigationAction
-              key={item.id}
-              icon={value === index ? item.icon2 : item.icon1}
-            />
-          ))}
-        </BottomNavigation>
-      </Paper>
-    </>
+        {navbarItems.map((item, index) => (
+          <BottomNavigationAction
+            key={item.id}
+            icon={value === index ? item.icon2 : item.icon1}
+          />
+        ))}
+      </BottomNavigation>
+    </Paper>
   );
 }

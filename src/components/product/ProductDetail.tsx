@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
-import { Box, Typography, Button, Divider } from "@mui/material";
+import { Box, Typography, Button, Divider, Chip } from "@mui/material";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import img1 from "../../assets/scangray.svg";
@@ -32,10 +32,10 @@ const ProductDetail = () => {
 
       if (diff > 0) {
         const duration = dayjs.duration(diff);
-        const days = String(duration.days()).padStart(2, '0');
-        const hours = String(duration.hours()).padStart(2, '0');
-        const minutes = String(duration.minutes()).padStart(2, '0');
-        const seconds = String(duration.seconds()).padStart(2, '0');
+        const days = String(duration.days()).padStart(2, "0");
+        const hours = String(duration.hours()).padStart(2, "0");
+        const minutes = String(duration.minutes()).padStart(2, "0");
+        const seconds = String(duration.seconds()).padStart(2, "0");
 
         setTimeLeft(`${days}:${hours}:${minutes}:${seconds}`);
         setIsDiscountExpired(false);
@@ -140,31 +140,44 @@ const ProductDetail = () => {
           <Typography variant="h6" fontWeight="bold">
             {productDetails?.name}
           </Typography>
-          <Typography variant="body2" color={theme.palette.primary.main}>{productDetails?.brand}</Typography>
-          <Typography variant="body2">محل قرارگیری: {productDetails?.location || "نامشحص"}</Typography>
+          <Typography variant="body2" color={theme.palette.primary.main}>
+            {productDetails?.brand}
+          </Typography>
+          <Typography variant="body2">
+            محل قرارگیری: {productDetails?.location || "نامشحص"}
+          </Typography>
         </Box>
         <Box>
-            <Box className="flex flex-col justify-start text-left">
-          {discountPercentage > 0 && timeLeft !== "00:00:00:00" &&(
-              <Box display="flex" className="w-full justify-end gap-3">
-                {expirationDate && (
-                  <Typography
-                    variant="body2"
-                    color="error"
-                    align="left"
-                    fontWeight={"bold"}
-                  >
-                    {timeLeft}
-                  </Typography>
-                )}
-                <Typography
-                  variant="body1"
-                  color="error"
-                  align="left"
-                  fontWeight={"bold"}
-                >
-                  {discountPercentage}%
-                </Typography>
+          {discountPercentage > 0 &&
+            timeLeft !== "00:00:00:00" &&
+            expirationDate && (
+              <Typography
+                variant="body2"
+                color="error"
+                align="left"
+                fontWeight={"bold"}
+              >
+                {timeLeft}
+              </Typography>
+            )}
+
+          <Box className="flex flex-col justify-start text-left">
+            {discountPercentage > 0 && timeLeft !== "00:00:00:00" && (
+              <Box
+                display="flex"
+                className="w-full justify-end gap-3 items-center"
+              >
+                <Chip
+                  label={`${discountPercentage}%`}
+                  sx={{
+                    backgroundColor: theme.palette.error.main,
+                    color: "white",
+                    fontSize: "12px",
+                    marginTop: "4px",
+                  }}
+                  size="small"
+                />
+
                 <Typography
                   variant="body1"
                   color="textSecondary"
@@ -175,12 +188,12 @@ const ProductDetail = () => {
                   {productDetails?.price}
                 </Typography>
               </Box>
-             
-          )} <Typography variant="h6" fontWeight={"bold"}>
-                {discountedPrice?.toLocaleString()}{" "}
-                <span style={{ fontSize: "12px" }}>تومان</span>
-              </Typography>
-            </Box>
+            )}{" "}
+            <Typography variant="h6" fontWeight={"bold"}>
+              {discountedPrice?.toLocaleString()}{" "}
+              <span style={{ fontSize: "12px" }}>تومان</span>
+            </Typography>
+          </Box>
         </Box>
       </Box>
 
